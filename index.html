@@ -82,14 +82,13 @@
        
        
        test = 3
-       crystal = new Crystal(this,pgWidth-75,pgHeight-350);
-       crystal.scene.physics.add.staticGroup()
+       crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
+
     
        enemies.push(new Enemy(this, 200, 200,'enemy'))
        
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
-       this.physics.add.collider(enemies,crystal);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
        cursors = this.input.keyboard.createCursorKeys();
@@ -174,6 +173,7 @@
 
     function AttackCrystal()
     {
+        console.log("lose hp in attack crystal")
         crystal.loseHP()
     }
 
