@@ -13,7 +13,7 @@ class Player extends Phaser.Physics.Arcade.Sprite
     }
     jump(event)
     {
-        //console.log(player.jumpCount)
+        //console.log(player.jumpCou    nt)
         if (player.body.touching.down || player.jumpCount<1)
         {
             player.setVelocityY(-1200);

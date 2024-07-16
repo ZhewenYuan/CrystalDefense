@@ -22,5 +22,5 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
             this.gameOver();
         }
         
-    }
+    }   
 }
