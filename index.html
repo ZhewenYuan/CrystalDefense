@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <script src = "Crystal.js"></script>
+    <script src ="Player.js"></script>
+    <script src = "Enemy.js"></script>
+    
+</head>
+
+<body>
+
+    <script>
+        
+    let pgWidth = window.innerWidth;
+    let pgHeight = window.innerHeight;
+
+    var config = {
+        type: Phaser.AUTO,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        physics: {
+            default: 'arcade',
+        },
+
+        scene: {
+            preload: preload,
+            create: create,
+            update: update,
+        }
+
+    };
+
+
+    var game = new Phaser.Game(config);
+    
+
+    //Game Objects
+    var platforms;
+    var player;
+    var crystal;
+
+    //Keyboard controls
+    var cursors;
+    var keys;
+    var space;
+        
+
+    function preload()
+    {
+        this.load.image('sky', 'Assets/bgUpSc.png');
+        this.load.image('platform', 'Assets/platform.png');
+        this.load.image('player', 'Assets/Knight.png');
+        this.load.image('crystal', 'Assets/crystal.PNG');
+        this.load.image('enemy', 'Assets/enemy.png');
+        this.load.image('sword', 'Assets/Knight Sword.png')
+        
+        this.load.atlas('enemyAnim', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
+    
+        this.load.audio('theme', 'Assets/crystal.wav');
+}
+        
+
+    
+
+    function create()
+    {
+        
+        //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
+       let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
+
+       //Create the platforms and the player character set to collide with the platforms
+       createPlatforms(this);
+        
+       
+    
+       console.log(pgWidth);
+       
+       
+       test = 3
+       crystal = new Crystal(this,pgWidth-75,pgHeight-350);
+       crystal.scene.physics.add.staticGroup()
+    
+       enemy = new Enemy(this, 200, 200);
+       
+       player = new Player(this, pgWidth - 1600, pgHeight - 200);
+       this.physics.add.collider(player, platforms);
+       this.physics.add.collider(enemy,crystal);
+       this.physics.add.collider(enemy, platforms);
+       //Set up user input
+       cursors = this.input.keyboard.createCursorKeys();
+       keys = this.input.keyboard.addKeys('A, D, W');
+       space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+       space.on('down', player.jump); //calls jump function when space is pressed
+        
+       let music = this.sound.add('theme');
+       music.loop = true;
+       music.play();
+       
+        
+       enemy.enemyWalk;
+       enemy.play('walk');
+        
+        
+        
+       /*
+       const camera = this.cameras.main;
+       camera.postFX.addVignette(0.5, 0.5, 0.7);
+       */       
+       
+    }
+
+    function createPlatforms(scene)
+    {
+        platforms = scene.physics.add.staticGroup();
+
+        //basePlatform is the floor of the game
+        let basePlatform = platforms.create(game.scale.width/2, game.scale.height-30, 'platform');
+        basePlatform.setScale(4, 1).refreshBody(); //scales the base platform in the x axis to cover the entire floor
+        
+        //platforms.setScale(0.5).refreshBody();
+        
+        platforms.create((pgWidth - 1600), (pgHeight - 650), 'platform'); //creates the upper left platform
+        platforms.create((pgWidth - 910), (pgHeight - 450), 'platform'); //creates the middle platform
+        platforms.create((pgWidth - 220), (pgHeight - 250), 'platform'); //creates the bottome right platform
+    }
+
+    function update()
+    {
+        crystal.loseHP(Enemy);
+        
+
+        
+        //Player will not move in the x-axis unless a movement key is being pressed
+        player.setVelocityX(0);
+
+        //Player has "drag" on the x-axis meaning they slide a bit after an input
+        player.setDragX(400);
+        if (player.body.touching.down)
+        {
+            player.jumpCount=0;
+        }
+        //Handle player movements
+        if (cursors.left.isDown || keys .A.isDown)
+        {
+            player.setVelocityX(-400);
+            player.flipX = true;
+        }
+
+        if (cursors.right.isDown || keys.D.isDown)
+        {
+            player.setVelocityX(400);
+            player.flipX = false;
+        }
+        if (keys.W.isDown)
+        {
+            player.jump;
+        }
+        if (enemy.x < crystal.x){
+            enemy.setVelocityX(400);
+            enemy.flipX = true;
+        }
+        else if (enemy.x > crystal.x){
+            enemy.setVelocityX(-400);
+            enemy.flipX = false;
+        }
+        
+        
+    }
+
+    </script>
+
+</body>
+
+</html>

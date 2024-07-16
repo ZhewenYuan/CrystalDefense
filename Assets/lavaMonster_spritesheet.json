@@ -1,0 +1,165 @@
+{
+  "frames": [
+    {
+      "filename": "lavaMonster_walking03",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 460
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 20,
+        "w": 420,
+        "h": 460
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "lavaMonster_walking00",
+      "frame": {
+        "x": 0,
+        "y": 460,
+        "w": 420,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 40,
+        "w": 420,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "lavaMonster_walking01",
+      "frame": {
+        "x": 0,
+        "y": 900,
+        "w": 440,
+        "h": 420
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 60,
+        "w": 440,
+        "h": 420
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "lavaMonster_walking02",
+      "frame": {
+        "x": 0,
+        "y": 1340,
+        "w": 420,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 40,
+        "w": 420,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "lavaMonster_walking04",
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 440
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 40,
+        "w": 420,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "lavaMonster_walking05",
+      "frame": {
+        "x": 860,
+        "y": 0,
+        "w": 420,
+        "h": 420
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 60,
+        "w": 420,
+        "h": 420
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  ],
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "lavaMonster_spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1280,
+      "h": 1780
+    },
+    "scale": 1
+  }
+}
