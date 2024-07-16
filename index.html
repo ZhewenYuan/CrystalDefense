@@ -37,11 +37,12 @@
 
     var game = new Phaser.Game(config);
     
-
+    var timedEvent;
     //Game Objects
     var platforms;
     var player;
     var crystal;
+    var enemies=[];
 
     //Keyboard controls
     var cursors;
@@ -84,12 +85,12 @@
        crystal = new Crystal(this,pgWidth-75,pgHeight-350);
        crystal.scene.physics.add.staticGroup()
     
-       enemy = new Enemy(this, 200, 200);
+       enemies.push(new Enemy(this, 200, 200,'enemy'))
        
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
-       this.physics.add.collider(enemy,crystal);
-       this.physics.add.collider(enemy, platforms);
+       this.physics.add.collider(enemies,crystal);
+       this.physics.add.collider(enemies, platforms);
        //Set up user input
        cursors = this.input.keyboard.createCursorKeys();
        keys = this.input.keyboard.addKeys('A, D, W');
@@ -100,11 +101,15 @@
        music.loop = true;
        music.play();
        
+       for(var i=0; i<enemies.length; i++)
+        {
+            //enemies[i].enemyWalk();
+            //enemies[i].play('walk')
+        }
+       
         
-       enemy.enemyWalk;
-       enemy.play('walk');
-        
-        
+       this.physics.add.overlap(crystal, enemies, AttackCrystal, null, this);
+       this.physics.add.overlap(enemies,crystal, DestroyEnemy ,null,this);
         
        /*
        const camera = this.cameras.main;
@@ -130,7 +135,6 @@
 
     function update()
     {
-        crystal.loseHP(Enemy);
         
 
         
@@ -159,16 +163,28 @@
         {
             player.jump;
         }
-        if (enemy.x < crystal.x){
-            enemy.setVelocityX(400);
-            enemy.flipX = true;
-        }
-        else if (enemy.x > crystal.x){
-            enemy.setVelocityX(-400);
-            enemy.flipX = false;
+
+        for(var i=0; i<enemies.length; i++)
+        {
+            enemies[i].MoveEnemy(crystal);
         }
         
         
+    }
+
+    function AttackCrystal()
+    {
+        crystal.loseHP()
+    }
+
+    function DestroyEnemy(enemy)
+    {
+        enemy.disableBody(true,true)
+        console.log("gone")
+    }
+    function addEnemy()
+    {
+        enemies.push(new Enemy(this, 200, 200))
     }
 
     </script>
@@ -176,3 +192,4 @@
 </body>
 
 </html>
+    
