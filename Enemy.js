@@ -9,6 +9,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.setCollideWorldBounds(true);
         this.setGravityY(3000);
         this.flipX = true;
+        this.path = null;
     }
 /*  
     enemyWalk(event){
@@ -27,16 +28,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     
     }
 */
-    MoveEnemy(crystal)
-    {
-        if (this.x < crystal.x){
-            this.setVelocityX(400);
-            this.flipX = true;
-        }
-        else if (this.x > crystal.x){
-            this.setVelocityX(-400);
-            this.flipX = false;
-        }
+    
+    setPath(path, end) {
+        this.path = path.shortestPath(path.map.keys().find(vert => vert.x === this.x && vert.y === this.y)
     }
+    
+    moveEnemy(crystal)
+    {
+        
+    }
+    
+    
     
 }

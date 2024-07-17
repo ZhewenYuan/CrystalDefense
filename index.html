@@ -9,6 +9,10 @@
     <script src ="Player.js"></script>
     <script src = "Enemy.js"></script>
     <script src = "EnemySpawner.js"></script>
+    <script src = "Node.js"></script>
+    <script src = "Path.js"></script>
+    <script src = "Platform.js"></script>
+
     
 </head>
 
@@ -122,15 +126,40 @@
     {
         platforms = scene.physics.add.staticGroup();
 
-        //basePlatform is the floor of the game
-        let basePlatform = platforms.create(game.scale.width/2, game.scale.height-30, 'platform');
-        basePlatform.setScale(4, 1).refreshBody(); //scales the base platform in the x axis to cover the entire floor
+        platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        //platforms.setScale(0.5).refreshBody();
+        g = new Path();
         
-        platforms.create((pgWidth - 1600), (pgHeight - 650), 'platform'); //creates the upper left platform
-        platforms.create((pgWidth - 910), (pgHeight - 450), 'platform'); //creates the middle platform
-        platforms.create((pgWidth - 220), (pgHeight - 250), 'platform'); //creates the bottome right platform
+        platOne = new Platform(250, 350, 500, g)
+        
+        platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        
+        platTwo = new Platform(950, 500, 500, g);
+        
+        platforms.create(350, 600, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platThree = new Platform(350, 600, 500, g);
+        
+        verts = Array.from(g.map.keys());
+        
+        verts.forEach((vert) => {
+            end = "";
+            
+            g.map.get(vert).forEach((e) => {
+                end += e.toString() + " | ";
+            });
+            
+            console.log(vert.toString() + " => " + end);
+        });
+        
+        console.log("___");
+        console.log(verts);
+        test = g.shortestPath(verts.find(vert => vert.x === 20 && vert.y === 375), verts.find(vert => vert.x === 720 && vert.y === 525));
+        enemyPath = test;
+        test.forEach((vert) => {
+           console.log(vert.toString()); 
+        });
+        
     }
 
     function update()
