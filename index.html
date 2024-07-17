@@ -8,6 +8,7 @@
     <script src = "Crystal.js"></script>
     <script src ="Player.js"></script>
     <script src = "Enemy.js"></script>
+    <script src = "EnemySpawner.js"></script>
     
 </head>
 
@@ -40,12 +41,13 @@
 
     var game = new Phaser.Game(config);
     
-    var timedEvent;
+    //var TimedEvent;
     //Game Objects
     var platforms;
     var player;
     var crystal;
     var enemies=[];
+    var Spawner;
 
     //Keyboard controls
     var cursors;
@@ -80,11 +82,11 @@
        createPlatforms(this);
                
        
-       test = 3
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
-
-    
-       enemies.push(new Enemy(this, 200, 200,'enemy'))
+        
+       //Spawner = new EnemySpawner(this,200,200,/*width*/[200],/*hight*/[200],1000,addEnemy,5)
+       this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:5})
+       //enemies.push(new Enemy(this, 200, 200,'enemy'))
        
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
@@ -181,9 +183,11 @@
         enemy.disableBody(true,true)
         console.log("gone")
     }
-    function addEnemy()
+    function addEnemy(lowerRange,upperRange, y)
     {
-        enemies.push(new Enemy(this, 200, 200))
+        x = Phaser.Math.Between(lowerRange,upperRange);
+
+        enemies.push(new Enemy(this, x, y,'enemy'))
     }
 
     </script>
