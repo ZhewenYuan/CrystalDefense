@@ -5,7 +5,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         super(scene,x,y,sprite)
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setScale(.175);
+        this.setScale(0.175);
         this.setCollideWorldBounds(true);
         this.body.setImmovable(true);
         this.crystalHP = 10;
@@ -18,7 +18,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         console.log(this.crystalHP);
         if (this.crystalHP <= 0) 
         {
-            console.log("GAME OVER")
+            console.log("GAME OVER");
             //this.gameOver();
         }
         

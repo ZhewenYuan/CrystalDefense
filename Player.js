@@ -21,11 +21,6 @@ class Player extends Phaser.Physics.Arcade.Sprite
             crystal.loseHP();
         }
     }
-    /*
-    attack(event)
-    {
-        let sword = 
-        
-    }
-    */
+    
+    
 }

@@ -5,7 +5,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         super(scene, x, y, Sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setScale(4);
+        this.setScale(0.175);
         this.setCollideWorldBounds(true);
         this.setGravityY(3000);
         this.flipX = true;

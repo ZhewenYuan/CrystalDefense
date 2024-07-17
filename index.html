@@ -6,8 +6,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
     <script src = "Crystal.js"></script>
-    <script src ="Player.js"></script>
+    <script src = "Player.js"></script>
     <script src = "Enemy.js"></script>
+    <script src = "Sword.js"></script>
     
 </head>
 
@@ -16,7 +17,11 @@
     <script>
 
     let pgWidth = 1848;
-    let pgHeight = 967;
+    let pgHeight = 967  ;
+    let swordDis = 50;
+    let attackState = false;
+    let faceLeft = false;
+    //let pointer = this.input.activePointer;    
 
     var config = {
         type: Phaser.AUTO,
@@ -46,6 +51,7 @@
     var player;
     var crystal;
     var enemies=[];
+    var sword;
 
     //Keyboard controls
     var cursors;
@@ -59,10 +65,9 @@
         this.load.image('platform', 'Assets/platform.png');
         this.load.image('player', 'Assets/Knight.png');
         this.load.image('crystal', 'Assets/crystal.PNG');
-        this.load.image('enemy', 'Assets/enemy.png');
+        this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
         this.load.image('sword', 'Assets/Knight Sword.png')
         
-        this.load.atlas('enemyAnim', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
     
         this.load.audio('theme', 'Assets/crystal.wav');
 }
@@ -78,8 +83,7 @@
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
-               
-       
+                  
        test = 3
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
 
@@ -98,7 +102,9 @@
        let music = this.sound.add('theme');
        music.loop = true;
        music.play();
-       
+        
+       sword = new Sword(this, player.x+swordDis, 0);
+        
        for(var i=0; i<enemies.length; i++)
         {
             //enemies[i].enemyWalk();
@@ -107,7 +113,10 @@
        
         
        this.physics.add.overlap(crystal, enemies, AttackCrystal, null, this);
-       this.physics.add.overlap(enemies,crystal, DestroyEnemy ,null,this);
+       this.physics.add.overlap(enemies,crystal, DestroyEnemy ,null,this); 
+       this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
+       
+       
         
        /*
        const camera = this.cameras.main;
@@ -123,9 +132,7 @@
         //basePlatform is the floor of the game
         let basePlatform = platforms.create(game.scale.width/2, game.scale.height-30, 'platform');
         basePlatform.setScale(4, 1).refreshBody(); //scales the base platform in the x axis to cover the entire floor
-        
-        //platforms.setScale(0.5).refreshBody();
-        
+                
         platforms.create((pgWidth - 1600), (pgHeight - 650), 'platform'); //creates the upper left platform
         platforms.create((pgWidth - 910), (pgHeight - 450), 'platform'); //creates the middle platform
         platforms.create((pgWidth - 220), (pgHeight - 250), 'platform'); //creates the bottome right platform
@@ -134,7 +141,20 @@
     function update()
     {
         
+        sword.y = player.y;
+        
+        if (faceLeft){
+            sword.x = player.x + (swordDis * -1);
+            player.flipX = true;
+            sword.flipX = true;
 
+        }
+        else{
+            sword.x = player.x + swordDis;
+            player.flipX = false;
+            sword.flipX = false;
+
+        }
         
         //Player will not move in the x-axis unless a movement key is being pressed
         player.setVelocityX(0);
@@ -148,25 +168,34 @@
         //Handle player movements
         if (cursors.left.isDown || keys .A.isDown)
         {
-            player.setVelocityX(-400);
-            player.flipX = true;
+            player.setVelocityX(-450);
+            faceLeft = true;
         }
 
         if (cursors.right.isDown || keys.D.isDown)
         {
-            player.setVelocityX(400);
-            player.flipX = false;
+            player.setVelocityX(450);
+            faceLeft = false;
         }
-        if (keys.W.isDown)
+        
+        this.input.on('pointerdown', function (pointer)
         {
-            player.jump;
-        }
 
+            console.log('down');
+            swordDis = 100;
+            attackState = true;
+            }, this)
+        this.input.on('pointerup', function (pointer)
+        {
+            console.log('up');   
+            swordDis=50;
+            attackState = false;
+        }, this)
+        
         for(var i=0; i<enemies.length; i++)
         {
             enemies[i].MoveEnemy(crystal);
         }
-        
         
     }
 
@@ -178,8 +207,20 @@
 
     function DestroyEnemy(enemy)
     {
-        enemy.disableBody(true,true)
-        console.log("gone")
+            enemy.disableBody(true,true)
+            enemies.push(new Enemy(this, 200, 200,'enemy'))
+            console.log("gone")
+    }
+    function EnemyKilled(enemy)
+    {
+        if (attackState){
+            enemy.disableBody(true,true)
+            enemies.push(new Enemy(this, 200, 200,'enemy'))
+            console.log("gone")
+        }
+    }
+    function DoNothing(){
+        console.log("Did Nothing");
     }
     function addEnemy()
     {
