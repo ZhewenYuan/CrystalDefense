@@ -1,7 +1,7 @@
 class EnemySpawner 
 {
     TimerEvent;
-    totalEnemies
+    totalEnemies;
     constructor(delay,xLow,xHigh,y,enemies,scene,repeat)
     {
         this.TimerEvent = scene.time.addEvent({

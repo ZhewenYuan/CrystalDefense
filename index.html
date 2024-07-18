@@ -80,7 +80,7 @@
         this.load.image('background', 'Assets/background1.png');
         this.load.image('platform', 'Assets/platform.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
-        this.load.image('crystal', 'Assets/crystal.PNG');
+        this.load.image('crystal', 'Assets/crystal_sprite.png');
         this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
         this.load.image('sword', 'Assets/Knight Sword.png')
         
@@ -102,9 +102,11 @@
        createPlatforms(this);
         
        counter = 0;
-       crystal = new Crystal(this,pgWidth-75,pgHeight-450,'crystal');
+       crystal = new Crystal(this,pgWidth-75,pgHeight-380,'crystal');
         
+       crystal.addTween(this, crystal.x, crystal.y+80, 1000);
 
+        
        spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, totalEnemies);
        spawn2 = new EnemySpawner(2000,600,900,200,enemies,this,totalEnemies);        
 
@@ -166,7 +168,8 @@
     function update()
     {
         
-        if (player.y > 1000) 
+        
+        if (player.y > 1200) 
         {
             gameOver.setText('Game Over');
             console.log("GAME OVER");
@@ -257,6 +260,11 @@
             
         }
     }
+        
+     
+    
+        
+    
     
 
     </script>
