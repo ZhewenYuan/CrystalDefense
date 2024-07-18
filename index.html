@@ -59,6 +59,9 @@
     var enemies=[];
 
     var sword;
+        
+    var gui;
+    var counter;
 
     var Spawner;
 
@@ -92,11 +95,12 @@
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
-
+        
+       counter = 0;
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
         
        //Spawner = new EnemySpawner(this,200,200,/*width*/[200],/*hight*/[200],1000,addEnemy,5)
-       this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:5})
+       this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:Infinity})
        //enemies.push(new Enemy(this, 200, 200,'enemy'))
        
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
@@ -125,7 +129,8 @@
        this.physics.add.overlap(enemies, crystal, DestroyEnemy  , null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
-       
+       gui = this.add.text(20, 20, '', {fontSize: '32px', fill: '#ffffff', strokeThickness: '10', stroke: '#000000'});
+       gui.setText('Kill Counter: 0');
         
        /*
        const camera = this.cameras.main;
@@ -198,7 +203,7 @@
         this.input.on('pointerup', function (pointer)
         {
             console.log('up');   
-            swordDis=50;
+            swordDis = 50;
             attackState = false;
         }, this)
         
@@ -223,8 +228,11 @@
     function EnemyKilled(enemy)
     {
         if (attackState){
+            //enemy.setVelocityY(-500);
+            counter++;
             enemy.disableBody(true,true)
-            console.log("gone")
+            //console.log("gone")
+            gui.setText('Kill Counter: ' + counter);
         }
     }
     
