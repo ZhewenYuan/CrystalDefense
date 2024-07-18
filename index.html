@@ -96,10 +96,6 @@
 
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
         
-       //Spawner = new EnemySpawner(this,200,200,/*width*/[200],/*hight*/[200],1000,addEnemy,5)
-       //this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:totalEnemies/2})
-       //this.TimedEvent = this.time.addEvent({delay: 100,callback: addEnemy, args :[600, 900,200] ,callbackScope: this,repeat:totalEnemies/2})
-       //enemies.push(new Enemy(this, 200, 200,'enemy'))
        spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
 
 
@@ -118,15 +114,14 @@
         
        sword = new Sword(this, player.x+swordDis, 0);
         
-       for(var i=0; i<enemies.length; i++)
-        {
-            //enemies[i].enemyWalk();
-            //enemies[i].play('walk')
-        }
+    //    for(var i=0; i<enemies.length; i++)
+    //     {
+    //         //enemies[i].enemyWalk();
+    //         //enemies[i].play('walk')
+    //     }
        
         
-       this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this);
-       //this.physics.add.overlap(enemies, crystal, DestroyEnemy  , null, this); 
+       this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
        
@@ -220,10 +215,7 @@
         crystal.loseHP()
     }
 
-    function DestroyEnemy(enemy)
-    {
-            
-    }
+
     function EnemyKilled(enemy)
     {
         if (attackState){
