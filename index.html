@@ -64,6 +64,7 @@
     var gui;
     var crystalHealth
     var counter;
+    var gameOver;
 
     var Spawner;
 
@@ -76,10 +77,10 @@
         
     function preload()
     {
-        this.load.image('sky', 'Assets/bgUpSc.png');
+        this.load.image('background', 'Assets/background1.png');
         this.load.image('platform', 'Assets/platform.png');
-        this.load.image('player', 'Assets/Knight.png');
-        this.load.image('crystal', 'Assets/crystal.PNG');
+        this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
+        this.load.image('crystal', 'Assets/crystal_sprite.png');
         this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
         this.load.image('sword', 'Assets/Knight Sword.png')
         
@@ -94,12 +95,16 @@
     {
 
 
-        totalEnemies = 20;
+        totalEnemies = 50;
 
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
-       let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
-        
+  
        path = new Path();
+
+
+       let background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background').setOrigin(0, 0);
+
+
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
 
@@ -115,16 +120,14 @@
 
         
        counter = 0;
+
        
+
         
+       
 
        spawn1 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal);
-       //spawn2 = new EnemySpawner(500,600,900,200,enemies,this,totalEnemies);        
-//
-//
-       //spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
-
-       
+        spawn2 = new EnemySpawner(1000, plats[1], enemies, this, totalEnemies, path, crystal);
 
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -150,8 +153,9 @@
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
-       gui = this.add.text(25, 20, '', {fontSize: '32px', fill: '#f90000', strokeThickness: '10', stroke: '#000000'});
-       crystalHealth = this.add.text(25, 75, '', {fontSize: '32px', fill: '#9f25c3', strokeThickness: '10', stroke: '#000000'});
+       gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        gui.setText('Kill Counter: 0');
        crystalHealth.setText('Crystal Health: 10');
         
@@ -171,6 +175,7 @@
         platforms = scene.physics.add.staticGroup();
 
 
+
         platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
         
         platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
@@ -182,12 +187,20 @@
         });
         plats[0].connectRight(plats[1].leftSide, path);
         plats[1].connectLeft(plats[2].rightSide, path);
-        
 
     }
 
     function update()
     {
+        
+        
+        if (player.y > 1200) 
+        {
+            gameOver.setText('Game Over');
+            console.log("GAME OVER");
+            game.destroy();
+            //this.gameOver();
+        }
         
         sword.y = player.y;
         
@@ -225,12 +238,16 @@
             player.setVelocityX(450);
             faceLeft = false;
         }
+        if (cursors.up.isDown || keys.W.isDown)
+        {
+            player.jump();
+        }
         
         this.input.on('pointerdown', function (pointer)
         {
-
             
-            swordDis = 100;
+            swordDis = 75;
+
             attackState = true;
             }, this)
         this.input.on('pointerup', function (pointer)
@@ -252,7 +269,7 @@
     {
         enemy.disableBody(true,true)
         crystal.loseHP();
-        //crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
+        crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
 
@@ -263,12 +280,17 @@
             //enemy.setVelocityY(-500);
             counter++;
             enemy.disableBody(true,true)
-            //gui.setText('Kill Counter: ' + counter);
+            gui.setText('Kill Counter: ' + counter);
 
             //console.log("gone")
             
         }
     }
+        
+     
+    
+        
+    
     
 
     </script>

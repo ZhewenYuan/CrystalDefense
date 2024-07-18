@@ -1,11 +1,11 @@
 class EnemySpawner 
 {
     TimerEvent;
+
     totalEnemies
     
     
-    constructor(delay,platform,enemies,scene,repeat, path, crystal)
-    {
+    constructor(delay,platform,enemies,scene,repeat, path, crystal) {
         
         this.TimerEvent = scene.time.addEvent({
             delay,
@@ -16,12 +16,10 @@ class EnemySpawner
         
     }
         
-    addEnemy(enemies, platform, crystal, path)
-    {
+    addEnemy(enemies, platform, crystal, path) {
         
-        if(totalEnemies>0)
-        {
-            var x = Phaser.Math.Between(0,platform.nodes.length - 1);
+        if(totalEnemies>0) {
+            var x = Phaser.Math.Between(1,platform.nodes.length - 2);
 
             enemies.push(new Enemy(this, platform.nodes[x].x, platform.y - 67,'enemy'));
             enemies[enemies.length - 1].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
