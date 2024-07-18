@@ -58,6 +58,7 @@
     var crystal;
     var enemies=[];
     var spawn1;
+    var spawn2;
 
     var sword;
         
@@ -91,7 +92,7 @@
 
     function create()
     {
-        totalEnemies = 40;
+        totalEnemies = 20;
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
        let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
 
@@ -101,6 +102,10 @@
        counter = 0;
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
         
+
+       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, totalEnemies);
+       spawn2 = new EnemySpawner(500,600,900,200,enemies,this,totalEnemies);        
+
 
        spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
 
@@ -159,7 +164,6 @@
     {
         
         sword.y = player.y;
-        gui.setText('Kill Counter: ' + counter);
         
         if (faceLeft){
             sword.x = player.x + (swordDis * -1);
@@ -221,7 +225,7 @@
     {
         enemy.disableBody(true,true)
         crystal.loseHP();
-        crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
+        //crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
 
@@ -232,6 +236,8 @@
             //enemy.setVelocityY(-500);
             counter++;
             enemy.disableBody(true,true)
+            //gui.setText('Kill Counter: ' + counter);
+
             //console.log("gone")
             
         }
