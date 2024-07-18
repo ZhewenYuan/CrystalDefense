@@ -18,7 +18,6 @@ class Player extends Phaser.Physics.Arcade.Sprite
         {
             player.setVelocityY(-1200);
             player.jumpCount+=1;
-            crystal.loseHP();
         }
     }
     
