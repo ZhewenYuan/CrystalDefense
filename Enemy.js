@@ -1,7 +1,8 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite 
 {
 
-    constructor (scene, x ,y, Sprite) {
+    constructor (scene, x ,y, Sprite) 
+    {
         super(scene, x, y, Sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -9,6 +10,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.setCollideWorldBounds(true);
         this.setGravityY(3000);
         this.flipX = true;
+        this.path = null;
     }
 /*  
     enemyWalk(event){
@@ -27,16 +29,21 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     
     }
 */
-    MoveEnemy(crystal)
+    
+
+    
+    moveEnemy(crystal)
     {
-        if (this.x < crystal.x){
+        if (this.x < crystal.x)
+        {
             this.setVelocityX(400);
             this.flipX = true;
         }
-        else if (this.x > crystal.x){
+        else if (this.x > crystal.x)
+        {
             this.setVelocityX(-400);
             this.flipX = false;
         }
     }
-    
+
 }

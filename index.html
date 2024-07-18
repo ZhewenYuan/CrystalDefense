@@ -9,6 +9,12 @@
     <script src = "Player.js"></script>
     <script src = "Enemy.js"></script>
     <script src = "Sword.js"></script>
+    <script src = "EnemySpawner.js"></script>
+    <script src = "Node.js"></script>
+    <script src = "Path.js"></script>
+    <script src = "Platform.js"></script>
+
+
     
 </head>
 
@@ -17,7 +23,7 @@
     <script>
 
     let pgWidth = 1848;
-    let pgHeight = 967  ;
+    let pgHeight = 967;
     let swordDis = 50;
     let attackState = false;
     let faceLeft = false;
@@ -45,13 +51,16 @@
 
     var game = new Phaser.Game(config);
     
-    var timedEvent;
+    //var TimedEvent;
     //Game Objects
     var platforms;
     var player;
     var crystal;
     var enemies=[];
+
     var sword;
+
+    var Spawner;
 
     //Keyboard controls
     var cursors;
@@ -83,12 +92,12 @@
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
-                  
-       test = 3
-       crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
 
-    
-       enemies.push(new Enemy(this, 200, 200,'enemy'))
+       crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
+        
+       //Spawner = new EnemySpawner(this,200,200,/*width*/[200],/*hight*/[200],1000,addEnemy,5)
+       this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:5})
+       //enemies.push(new Enemy(this, 200, 200,'enemy'))
        
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
@@ -113,7 +122,7 @@
        
         
        this.physics.add.overlap(crystal, enemies, AttackCrystal, null, this);
-       this.physics.add.overlap(enemies,crystal, DestroyEnemy ,null,this); 
+       this.physics.add.overlap(enemies, crystal, DestroyEnemy  , null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
        
@@ -136,6 +145,7 @@
         platforms.create((pgWidth - 1600), (pgHeight - 650), 'platform'); //creates the upper left platform
         platforms.create((pgWidth - 910), (pgHeight - 450), 'platform'); //creates the middle platform
         platforms.create((pgWidth - 220), (pgHeight - 250), 'platform'); //creates the bottome right platform
+
     }
 
     function update()
@@ -194,7 +204,7 @@
         
         for(var i=0; i<enemies.length; i++)
         {
-            enemies[i].MoveEnemy(crystal);
+            enemies[i].moveEnemy(crystal);
         }
         
     }
@@ -208,23 +218,21 @@
     function DestroyEnemy(enemy)
     {
             enemy.disableBody(true,true)
-            enemies.push(new Enemy(this, 200, 200,'enemy'))
             console.log("gone")
     }
     function EnemyKilled(enemy)
     {
         if (attackState){
             enemy.disableBody(true,true)
-            enemies.push(new Enemy(this, 200, 200,'enemy'))
             console.log("gone")
         }
     }
-    function DoNothing(){
-        console.log("Did Nothing");
-    }
-    function addEnemy()
+    
+    function addEnemy(lowerRange,upperRange, y)
     {
-        enemies.push(new Enemy(this, 200, 200))
+        x = Phaser.Math.Between(lowerRange,upperRange);
+
+        enemies.push(new Enemy(this, x, y,'enemy'))
     }
 
     </script>
