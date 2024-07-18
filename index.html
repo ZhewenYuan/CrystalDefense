@@ -61,6 +61,11 @@
     var spawn2;
 
     var sword;
+        
+    var gui;
+    var crystalHealth
+    var counter;
+    var gameOver;
 
     var Spawner;
 
@@ -94,12 +99,18 @@
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
+            
 
-       crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
+       counter = 0;
+       crystal = new Crystal(this,pgWidth-75,pgHeight-450,'crystal');
         
-       spawn1 = new EnemySpawner(500,100,400,200,enemies,this, totalEnemies);
-       spawn2 = new EnemySpawner(1000,600,900,200,enemies,this,totalEnemies);        
 
+
+       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, totalEnemies);
+       spawn2 = new EnemySpawner(2000,600,900,200,enemies,this,totalEnemies);        
+
+
+       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
 
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
@@ -126,7 +137,11 @@
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
-       
+       gui = this.add.text(25, 20, '', {fontSize: '32px', fill: '#f90000'});
+       crystalHealth = this.add.text(25, 75, '', {fontSize: '32px', fill: '#9f25c3'});
+       gameOver = this.add.text((pgWidth/2)-175, (pgHeight/2)-5, '', {fontSize: '70px', fill: '#da2828'});
+       gui.setText('Kill Counter: 0');
+       crystalHealth.setText('Crystal Health: 10');
         
        /*
        const camera = this.cameras.main;
@@ -199,7 +214,7 @@
         this.input.on('pointerup', function (pointer)
         {
             console.log('up');   
-            swordDis=50;
+            swordDis = 50;
             attackState = false;
         }, this)
         
@@ -213,16 +228,22 @@
     function AttackCrystal(enemy)
     {
         enemy.disableBody(true,true)
-
-        crystal.loseHP()
+        crystal.loseHP();
+        crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
+        
     }
 
 
     function EnemyKilled(enemy)
     {
         if (attackState){
+            //enemy.setVelocityY(-500);
+            counter++;
             enemy.disableBody(true,true)
-            console.log("gone")
+            gui.setText('Enemies left: ' + totalEnemies);
+
+            //console.log("gone")
+            
         }
     }
     

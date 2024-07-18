@@ -9,7 +9,7 @@ class EnemySpawner
             callback: this.addEnemy, 
             args :[xLow, xHigh,y,enemies],
             callbackScope: scene,
-            repeat})
+            repeat});
     }
         
     addEnemy(lowerRange,upperRange, y,enemies)
@@ -18,8 +18,8 @@ class EnemySpawner
         {
             var x = Phaser.Math.Between(lowerRange,upperRange);
 
-            enemies.push(new Enemy(this, x, y,'enemy'))
-            totalEnemies--
+            enemies.push(new Enemy(this, x, y,'enemy'));
+            totalEnemies--;
             //console.log(totalEnemies)
         }
         

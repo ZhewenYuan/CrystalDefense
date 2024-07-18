@@ -18,7 +18,9 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         console.log(this.crystalHP);
         if (this.crystalHP <= 0) 
         {
+            gameOver.setText('Game Over');
             console.log("GAME OVER");
+            game.destroy();
             //this.gameOver();
         }
     }   
