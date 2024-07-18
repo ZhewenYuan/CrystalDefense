@@ -51,16 +51,18 @@
 
     var game = new Phaser.Game(config);
     
-    //var TimedEvent;
+    var totalEnemies;
     //Game Objects
     var platforms;
     var player;
     var crystal;
     var enemies=[];
+    var spawn1;
 
     var sword;
         
     var gui;
+    var crystalHealth
     var counter;
 
     var Spawner;
@@ -89,7 +91,7 @@
 
     function create()
     {
-        
+        totalEnemies = 40;
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
        let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
 
@@ -99,10 +101,9 @@
        counter = 0;
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
         
-       //Spawner = new EnemySpawner(this,200,200,/*width*/[200],/*hight*/[200],1000,addEnemy,5)
-       this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:Infinity})
-       //enemies.push(new Enemy(this, 200, 200,'enemy'))
-       
+
+       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
+
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -118,19 +119,20 @@
         
        sword = new Sword(this, player.x+swordDis, 0);
         
-       for(var i=0; i<enemies.length; i++)
-        {
-            //enemies[i].enemyWalk();
-            //enemies[i].play('walk')
-        }
+    //    for(var i=0; i<enemies.length; i++)
+    //     {
+    //         //enemies[i].enemyWalk();
+    //         //enemies[i].play('walk')
+    //     }
        
         
-       this.physics.add.overlap(crystal, enemies, AttackCrystal, null, this);
-       this.physics.add.overlap(enemies, crystal, DestroyEnemy  , null, this); 
+       this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
-       gui = this.add.text(20, 20, '', {fontSize: '32px', fill: '#ffffff', strokeThickness: '10', stroke: '#000000'});
+       gui = this.add.text(25, 20, '', {fontSize: '32px', fill: '#f90000', strokeThickness: '10', stroke: '#000000'});
+       crystalHealth = this.add.text(25, 75, '', {fontSize: '32px', fill: '#9f25c3', strokeThickness: '10', stroke: '#000000'});
        gui.setText('Kill Counter: 0');
+       crystalHealth.setText('Crystal Health: 10');
         
        /*
        const camera = this.cameras.main;
@@ -157,6 +159,7 @@
     {
         
         sword.y = player.y;
+        gui.setText('Kill Counter: ' + counter);
         
         if (faceLeft){
             sword.x = player.x + (swordDis * -1);
@@ -214,17 +217,15 @@
         
     }
 
-    function AttackCrystal()
+    function AttackCrystal(enemy)
     {
-        console.log("lose hp in attack crystal")
-        crystal.loseHP()
+        enemy.disableBody(true,true)
+        crystal.loseHP();
+        crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
+        
     }
 
-    function DestroyEnemy(enemy)
-    {
-            enemy.disableBody(true,true)
-            console.log("gone")
-    }
+
     function EnemyKilled(enemy)
     {
         if (attackState){
@@ -232,16 +233,10 @@
             counter++;
             enemy.disableBody(true,true)
             //console.log("gone")
-            gui.setText('Kill Counter: ' + counter);
+            
         }
     }
     
-    function addEnemy(lowerRange,upperRange, y)
-    {
-        x = Phaser.Math.Between(lowerRange,upperRange);
-
-        enemies.push(new Enemy(this, x, y,'enemy'))
-    }
 
     </script>
 
