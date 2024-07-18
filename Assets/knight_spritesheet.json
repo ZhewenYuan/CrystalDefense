@@ -1,0 +1,495 @@
+{
+  "frames": {
+    "knight_jumping06": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 500
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 500
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping07": {
+      "frame": {
+        "x": 0,
+        "y": 500,
+        "w": 300,
+        "h": 500
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 20,
+        "w": 300,
+        "h": 500
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_walking01": {
+      "frame": {
+        "x": 0,
+        "y": 1000,
+        "w": 320,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_walking02": {
+      "frame": {
+        "x": 0,
+        "y": 1480,
+        "w": 320,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_walking03": {
+      "frame": {
+        "x": 300,
+        "y": 0,
+        "w": 320,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_idle00": {
+      "frame": {
+        "x": 300,
+        "y": 480,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_idle01": {
+      "frame": {
+        "x": 320,
+        "y": 960,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_idle02": {
+      "frame": {
+        "x": 600,
+        "y": 480,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_idle03": {
+      "frame": {
+        "x": 620,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_idle04": {
+      "frame": {
+        "x": 320,
+        "y": 1440,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_idle05": {
+      "frame": {
+        "x": 620,
+        "y": 960,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping00": {
+      "frame": {
+        "x": 900,
+        "y": 480,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 40,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping01": {
+      "frame": {
+        "x": 920,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 40,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping02": {
+      "frame": {
+        "x": 620,
+        "y": 1440,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 20,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_walking00": {
+      "frame": {
+        "x": 1220,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_walking04": {
+      "frame": {
+        "x": 1700,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_walking05": {
+      "frame": {
+        "x": 1220,
+        "y": 300,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping05": {
+      "frame": {
+        "x": 1700,
+        "y": 480,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 20,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping03": {
+      "frame": {
+        "x": 1200,
+        "y": 600,
+        "w": 300,
+        "h": 420
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 20,
+        "w": 300,
+        "h": 420
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "knight_jumping04": {
+      "frame": {
+        "x": 1200,
+        "y": 900,
+        "w": 300,
+        "h": 400
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 20,
+        "w": 300,
+        "h": 400
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 520
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "knight_spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 2000,
+      "h": 1960
+    },
+    "scale": 1
+  }
+}
