@@ -1,4 +1,4 @@
-class Node {
+    class Node {
     constructor(x, y, jump) {
         this.x = x;
         this.y = y;
