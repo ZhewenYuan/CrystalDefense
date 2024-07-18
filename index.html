@@ -65,6 +65,7 @@
     var gui;
     var crystalHealth
     var counter;
+    var gameOver;
 
     var Spawner;
 
@@ -100,11 +101,11 @@
        createPlatforms(this);
         
        counter = 0;
-       crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
+       crystal = new Crystal(this,pgWidth-75,pgHeight-450,'crystal');
         
 
        spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, totalEnemies);
-       spawn2 = new EnemySpawner(500,600,900,200,enemies,this,totalEnemies);        
+       spawn2 = new EnemySpawner(2000,600,900,200,enemies,this,totalEnemies);        
 
 
        spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
@@ -136,6 +137,7 @@
        
        gui = this.add.text(25, 20, '', {fontSize: '32px', fill: '#f90000', strokeThickness: '10', stroke: '#000000'});
        crystalHealth = this.add.text(25, 75, '', {fontSize: '32px', fill: '#9f25c3', strokeThickness: '10', stroke: '#000000'});
+       gameOver = this.add.text((pgWidth/2)-175, (pgHeight/2)-5, '', {fontSize: '70px', fill: '#da2828', strokeThickness: '10', stroke: '#000000'});
        gui.setText('Kill Counter: 0');
        crystalHealth.setText('Crystal Health: 10');
         
