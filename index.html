@@ -26,6 +26,7 @@
     let swordDis = 50;
     let attackState = false;
     let faceLeft = false;
+    let gameState = false;
     //let pointer = this.input.activePointer;    
 
     var config = {
@@ -75,6 +76,7 @@
         
     var path;
         
+        
     function preload()
     {
         this.load.image('background', 'Assets/background1.png');
@@ -95,7 +97,7 @@
     {
 
 
-        totalEnemies = 50;
+       totalEnemies = Infinity;
 
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
   
@@ -122,7 +124,6 @@
        counter = 0;
 
        
-
         
        
 
@@ -133,7 +134,7 @@
        this.physics.add.collider(enemies, platforms);
        //Set up user input
        cursors = this.input.keyboard.createCursorKeys();
-       keys = this.input.keyboard.addKeys('A, D, W');
+       keys = this.input.keyboard.addKeys('A, D, W, E');
        space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
        space.on('down', player.jump); //calls jump function when space is pressed
         
@@ -142,6 +143,9 @@
        music.play();
         
        sword = new Sword(this, player.x+swordDis, 0);
+       sword.x = player.x + swordDis;
+       sword.y = 10000;
+
         
     //    for(var i=0; i<enemies.length; i++)
     //     {
@@ -174,13 +178,11 @@
         
         platforms = scene.physics.add.staticGroup();
 
-
-
         platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        platforms.create(1000, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
         
-        platforms.create(350, 600, 'platform').setDisplaySize(500, 50).refreshBody();
+        platforms.create(350, 700, 'platform').setDisplaySize(500, 50).refreshBody();
         
         platforms.getChildren().forEach(val => {
             plats.push(new Platform(val.x, val.y, 500, path));
@@ -190,12 +192,17 @@
 
     }
 
+        
     function update()
-    {
-        
-        
-        if (player.y > 1200) 
-        {
+        {   
+            
+            if (keys.E.isDown){
+                gameState = true;
+            }
+            
+            if (gameState){
+                if (player.y > 1200) 
+            {
             gameOver.setText('Game Over');
             console.log("GAME OVER");
             game.destroy();
@@ -227,7 +234,7 @@
             player.jumpCount=0;
         }
         //Handle player movements
-        if (cursors.left.isDown || keys .A.isDown)
+        if (cursors.left.isDown || keys .A.isDown)
         {
             player.setVelocityX(-450);
             faceLeft = true;
@@ -262,8 +269,14 @@
 
             enemies[i].moveEnemy();
         }
+            }
+        
+            
         
     }
+    
+        
+    
 
     function AttackCrystal(enemy)
     {
