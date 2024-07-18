@@ -60,4 +60,8 @@ class Path {
             }
         });
     }
+    
+    getMap() {
+        return map;
+    }
 }

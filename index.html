@@ -6,11 +6,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
     <script src = "Crystal.js"></script>
-    <script src ="Player.js"></script>
+    <script src = "Player.js"></script>
     <script src = "Enemy.js"></script>
+    <script src = "Sword.js"></script>
+    <script src = "EnemySpawner.js"></script>
     <script src = "Node.js"></script>
     <script src = "Path.js"></script>
     <script src = "Platform.js"></script>
+
+
     
 </head>
 
@@ -19,6 +23,10 @@
     <script>
         let pgWidth = 1848;
     let pgHeight = 967;
+    let swordDis = 50;
+    let attackState = false;
+    let faceLeft = false;
+    //let pointer = this.input.activePointer;    
 
     var config = {
         type: Phaser.AUTO,
@@ -42,19 +50,29 @@
 
     var game = new Phaser.Game(config);
     
-    var timedEvent;
+    var totalEnemies;
     //Game Objects
     var platforms;
     var player;
     var crystal;
     var enemies=[];
+    var spawn1;
+    var spawn2;
+
+    var sword;
+        
+    var gui;
+    var crystalHealth
+    var counter;
+
+    var Spawner;
 
     //Keyboard controls
     var cursors;
     var keys;
     var space;
         
-    let g;
+    var path;
         
     function preload()
     {
@@ -62,10 +80,9 @@
         this.load.image('platform', 'Assets/platform.png');
         this.load.image('player', 'Assets/Knight.png');
         this.load.image('crystal', 'Assets/crystal.PNG');
-        this.load.image('enemy', 'Assets/enemy.png');
+        this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
         this.load.image('sword', 'Assets/Knight Sword.png')
         
-        this.load.atlas('enemyAnim', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
     
         this.load.audio('theme', 'Assets/crystal.wav');
 }
@@ -75,21 +92,40 @@
 
     function create()
     {
+
+
+        totalEnemies = 20;
+
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
        let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
         
        path = new Path();
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
+
                
        
-       test = 3
-       crystal = new Crystal(this,200,281,'crystal');
+       
+       crystal = new Crystal(this,200,283,'crystal');
 
-       enemies.push(new Enemy(this, 200, 531,'enemy'))
-       enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
+       //enemies.push(new Enemy(this, 200, 533,'enemy'))
+       //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
        player = new Player(this, 100, 100);
+
+        
+       counter = 0;
+       
+        
+
+       spawn1 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal);
+       //spawn2 = new EnemySpawner(500,600,900,200,enemies,this,totalEnemies);        
+//
+//
+       //spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
+
+       
+
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
@@ -101,16 +137,23 @@
        let music = this.sound.add('theme');
        music.loop = true;
        music.play();
-       
-       for(var i=0; i<enemies.length; i++)
-        {
-            //enemies[i].enemyWalk();
-            //enemies[i].play('walk')
-        }
+        
+       sword = new Sword(this, player.x+swordDis, 0);
+        
+    //    for(var i=0; i<enemies.length; i++)
+    //     {
+    //         //enemies[i].enemyWalk();
+    //         //enemies[i].play('walk')
+    //     }
        
         
-       this.physics.add.overlap(crystal, enemies, AttackCrystal, null, this);
-       this.physics.add.overlap(enemies,crystal, DestroyEnemy ,null,this);
+       this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
+       this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
+       
+       gui = this.add.text(25, 20, '', {fontSize: '32px', fill: '#f90000', strokeThickness: '10', stroke: '#000000'});
+       crystalHealth = this.add.text(25, 75, '', {fontSize: '32px', fill: '#9f25c3', strokeThickness: '10', stroke: '#000000'});
+       gui.setText('Kill Counter: 0');
+       crystalHealth.setText('Crystal Health: 10');
         
        /*
        const camera = this.cameras.main;
@@ -119,13 +162,14 @@
        
     }
 
-    plats;    
+    let plats;    
         
     function createPlatforms(scene)
     {
         plats = [];
         
         platforms = scene.physics.add.staticGroup();
+
 
         platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
         
@@ -139,12 +183,26 @@
         plats[0].connectRight(plats[1].leftSide, path);
         plats[1].connectLeft(plats[2].rightSide, path);
         
+
     }
 
     function update()
     {
         
+        sword.y = player.y;
+        
+        if (faceLeft){
+            sword.x = player.x + (swordDis * -1);
+            player.flipX = true;
+            sword.flipX = true;
 
+        }
+        else{
+            sword.x = player.x + swordDis;
+            player.flipX = false;
+            sword.flipX = false;
+
+        }
         
         //Player will not move in the x-axis unless a movement key is being pressed
         player.setVelocityX(0);
@@ -158,43 +216,60 @@
         //Handle player movements
         if (cursors.left.isDown || keys .A.isDown)
         {
-            player.setVelocityX(-400);
-            player.flipX = true;
+            player.setVelocityX(-450);
+            faceLeft = true;
         }
 
         if (cursors.right.isDown || keys.D.isDown)
         {
-            player.setVelocityX(400);
-            player.flipX = false;
+            player.setVelocityX(450);
+            faceLeft = false;
         }
-        if (keys.W.isDown)
+        
+        this.input.on('pointerdown', function (pointer)
         {
-            player.jump;
-        }
 
-        for(var i=0; i<enemies.length; i++)
+            
+            swordDis = 100;
+            attackState = true;
+            }, this)
+        this.input.on('pointerup', function (pointer)
         {
+             
+            swordDis = 50;
+            attackState = false;
+        }, this)
+        
+        for(let i=0; i<enemies.length; i++)
+        {
+
             enemies[i].moveEnemy();
         }
         
+    }
+
+    function AttackCrystal(enemy)
+    {
+        enemy.disableBody(true,true)
+        crystal.loseHP();
+        //crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
 
-    function AttackCrystal()
-    {
-        console.log("lose hp in attack crystal")
-        crystal.loseHP()
-    }
 
-    function DestroyEnemy(enemy)
+    function EnemyKilled(enemy)
     {
-        enemy.disableBody(true,true)
-        console.log("gone")
+        if (attackState){
+            //enemy.setVelocityY(-500);
+            counter++;
+            enemy.disableBody(true,true)
+            //gui.setText('Kill Counter: ' + counter);
+
+            //console.log("gone")
+            
+        }
     }
-    function addEnemy()
-    {
-        enemies.push(new Enemy(this, 200, 200))
-    }
+    
 
     </script>
 

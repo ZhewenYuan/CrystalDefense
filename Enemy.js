@@ -5,8 +5,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         super(scene, x, y, Sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setScale(4);
-        this.setCollideWorldBounds(true);
+        this.setScale(0.175);
+        this.setCollideWorldBounds(true);   
+
         this.setGravityY(3000);
         this.flipX = true;
         this.path = null;
@@ -30,6 +31,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     }
 */
     
+
     setPath(path, end) {
         this.path = path.shortestPath(Array.from(path.map.keys()).find(vert => vert.x === this.x && vert.y === this.y), end);
         this.currentNode = 0;
@@ -41,12 +43,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         
         if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) {
             
+            
+            
             if (this.y != this.path[this.nextNode].y) {
+                
                 this.setVelocityX(0);
                 return;
             }
             
             if (this.nextNode != this.path.length - 1) {
+                
                 this.currentNode++;
                 this.nextNode++;
                 
@@ -55,6 +61,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
                     this.setVelocityY(-1200);
                 }
             } else {
+                
                 this.setVelocityX(0);
                 return;
             }
@@ -62,12 +69,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         
         
             if (this.x < this.path[this.nextNode].x) {
+                
             this.setVelocityX(400);
             } else {
                 this.setVelocityX(-400);
             }
         
         
+
+    
+
     }
     
     
