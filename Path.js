@@ -28,7 +28,7 @@ class Path {
         let path = [];
         
         explored.push(start);
-        
+        path.push(start);
         this.answer = null;
         
         this.map.get(start).forEach((next) => {

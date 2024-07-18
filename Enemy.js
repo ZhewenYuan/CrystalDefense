@@ -10,6 +10,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.setGravityY(3000);
         this.flipX = true;
         this.path = null;
+        this.currentNode = null;
     }
 /*  
     enemyWalk(event){
@@ -30,11 +31,42 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
 */
     
     setPath(path, end) {
-        this.path = path.shortestPath(path.map.keys().find(vert => vert.x === this.x && vert.y === this.y)
+        this.path = path.shortestPath(Array.from(path.map.keys()).find(vert => vert.x === this.x && vert.y === this.y), end);
+        this.currentNode = 0;
+        this.nextNode = 1;
     }
     
-    moveEnemy(crystal)
+    moveEnemy()
     {
+        
+        if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) {
+            
+            if (this.y != this.path[this.nextNode].y) {
+                this.setVelocityX(0);
+                return;
+            }
+            
+            if (this.nextNode != this.path.length - 1) {
+                this.currentNode++;
+                this.nextNode++;
+                
+                
+                if (this.path[this.currentNode].jump && (Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x) > 10 || this.y < this.path[this.nextNode.y])) {
+                    this.setVelocityY(-1200);
+                }
+            } else {
+                this.setVelocityX(0);
+                return;
+            }
+        }
+        
+        
+            if (this.x < this.path[this.nextNode].x) {
+            this.setVelocityX(400);
+            } else {
+                this.setVelocityX(-400);
+            }
+        
         
     }
     

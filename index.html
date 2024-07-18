@@ -17,8 +17,7 @@
 <body>
 
     <script>
-
-    let pgWidth = 1848;
+        let pgWidth = 1848;
     let pgHeight = 967;
 
     var config = {
@@ -55,7 +54,8 @@
     var keys;
     var space;
         
-
+    let g;
+        
     function preload()
     {
         this.load.image('sky', 'Assets/bgUpSc.png');
@@ -75,21 +75,21 @@
 
     function create()
     {
-        
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
        let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
-
+        
+       path = new Path();
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
                
        
        test = 3
-       crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
+       crystal = new Crystal(this,200,281,'crystal');
 
-    
-       enemies.push(new Enemy(this, 200, 200,'enemy'))
+       enemies.push(new Enemy(this, 200, 531,'enemy'))
+       enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
-       player = new Player(this, pgWidth - 1600, pgHeight - 200);
+       player = new Player(this, 100, 100);
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
@@ -119,43 +119,25 @@
        
     }
 
+    plats;    
+        
     function createPlatforms(scene)
     {
+        plats = [];
+        
         platforms = scene.physics.add.staticGroup();
 
         platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        g = new Path();
-        
-        platOne = new Platform(250, 350, 500, g)
-        
         platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
-        
-        platTwo = new Platform(950, 500, 500, g);
         
         platforms.create(350, 600, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        platThree = new Platform(350, 600, 500, g);
-        
-        verts = Array.from(g.map.keys());
-        
-        verts.forEach((vert) => {
-            end = "";
-            
-            g.map.get(vert).forEach((e) => {
-                end += e.toString() + " | ";
-            });
-            
-            console.log(vert.toString() + " => " + end);
+        platforms.getChildren().forEach(val => {
+            plats.push(new Platform(val.x, val.y, 500, path));
         });
-        
-        console.log("___");
-        console.log(verts);
-        test = g.shortestPath(verts.find(vert => vert.x === 20 && vert.y === 375), verts.find(vert => vert.x === 720 && vert.y === 525));
-        enemyPath = test;
-        test.forEach((vert) => {
-           console.log(vert.toString()); 
-        });
+        plats[0].connectRight(plats[1].leftSide, path);
+        plats[1].connectLeft(plats[2].rightSide, path);
         
     }
 
@@ -192,7 +174,7 @@
 
         for(var i=0; i<enemies.length; i++)
         {
-            enemies[i].MoveEnemy(crystal);
+            enemies[i].moveEnemy();
         }
         
         
