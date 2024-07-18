@@ -51,12 +51,13 @@
 
     var game = new Phaser.Game(config);
     
-    //var TimedEvent;
+    var totalEnemies;
     //Game Objects
     var platforms;
     var player;
     var crystal;
     var enemies=[];
+    var spawn1;
 
     var sword;
 
@@ -86,7 +87,7 @@
 
     function create()
     {
-        
+        totalEnemies = 40;
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
        let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
 
@@ -96,9 +97,12 @@
        crystal = new Crystal(this,pgWidth-75,pgHeight-350,'crystal');
         
        //Spawner = new EnemySpawner(this,200,200,/*width*/[200],/*hight*/[200],1000,addEnemy,5)
-       this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:5})
+       //this.TimedEvent = this.time.addEvent({delay: 1000,callback: addEnemy, args :[100, 400,200] ,callbackScope: this,repeat:totalEnemies/2})
+       //this.TimedEvent = this.time.addEvent({delay: 100,callback: addEnemy, args :[600, 900,200] ,callbackScope: this,repeat:totalEnemies/2})
        //enemies.push(new Enemy(this, 200, 200,'enemy'))
-       
+       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
+
+
        player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -121,8 +125,8 @@
         }
        
         
-       this.physics.add.overlap(crystal, enemies, AttackCrystal, null, this);
-       this.physics.add.overlap(enemies, crystal, DestroyEnemy  , null, this); 
+       this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this);
+       //this.physics.add.overlap(enemies, crystal, DestroyEnemy  , null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
        
@@ -209,16 +213,16 @@
         
     }
 
-    function AttackCrystal()
+    function AttackCrystal(enemy)
     {
-        console.log("lose hp in attack crystal")
+        enemy.disableBody(true,true)
+
         crystal.loseHP()
     }
 
     function DestroyEnemy(enemy)
     {
-            enemy.disableBody(true,true)
-            console.log("gone")
+            
     }
     function EnemyKilled(enemy)
     {
@@ -228,12 +232,6 @@
         }
     }
     
-    function addEnemy(lowerRange,upperRange, y)
-    {
-        x = Phaser.Math.Between(lowerRange,upperRange);
-
-        enemies.push(new Enemy(this, x, y,'enemy'))
-    }
 
     </script>
 
