@@ -21,8 +21,7 @@
 <body>
 
     <script>
-
-    let pgWidth = 1848;
+        let pgWidth = 1848;
     let pgHeight = 967;
     let swordDis = 50;
     let attackState = false;
@@ -74,7 +73,8 @@
     var keys;
     var space;
         
-
+    var path;
+        
     function preload()
     {
         this.load.image('background', 'Assets/background1.png');
@@ -93,27 +93,42 @@
 
     function create()
     {
-        totalEnemies = 20;
+
+
+        totalEnemies = 50;
+
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
+  
+       path = new Path();
+
 
        let background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background').setOrigin(0, 0);
 
+
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
+
+               
+       
+       
+       crystal = new Crystal(this,200,283,'crystal');
+
+       //enemies.push(new Enemy(this, 200, 533,'enemy'))
+       //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
+       
+       player = new Player(this, 100, 100);
+
         
        counter = 0;
-       crystal = new Crystal(this,pgWidth-75,pgHeight-380,'crystal');
-        
-       crystal.addTween(this, crystal.x, crystal.y+80, 1000);
+
+       
 
         
-       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, totalEnemies);
-       spawn2 = new EnemySpawner(2000,600,900,200,enemies,this,totalEnemies);        
+       
 
+       spawn1 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal);
+        spawn2 = new EnemySpawner(1000, plats[1], enemies, this, totalEnemies, path, crystal);
 
-       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
-
-       player = new Player(this, pgWidth - 1600, pgHeight - 800);
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
@@ -151,17 +166,27 @@
        
     }
 
+    let plats;    
+        
     function createPlatforms(scene)
     {
+        plats = [];
+        
         platforms = scene.physics.add.staticGroup();
 
-        //basePlatform is the floor of the game
-        let basePlatform = platforms.create(game.scale.width/2, game.scale.height+2005, 'platform');
-        basePlatform.setScale(4, 1).refreshBody(); //scales the base platform in the x axis to cover the entire floor
-                
-        platforms.create((pgWidth - 1600), (pgHeight - 600), 'platform'); //creates the upper left platform
-        platforms.create((pgWidth - 910), (pgHeight - 400), 'platform'); //creates the middle platform
-        platforms.create((pgWidth - 220), (pgHeight - 200), 'platform'); //creates the bottome right platform
+
+
+        platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        
+        platforms.create(350, 600, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.getChildren().forEach(val => {
+            plats.push(new Platform(val.x, val.y, 500, path));
+        });
+        plats[0].connectRight(plats[1].leftSide, path);
+        plats[1].connectLeft(plats[2].rightSide, path);
 
     }
 
@@ -220,21 +245,22 @@
         
         this.input.on('pointerdown', function (pointer)
         {
-
-            console.log('down');
+            
             swordDis = 75;
+
             attackState = true;
             }, this)
         this.input.on('pointerup', function (pointer)
         {
-            console.log('up');   
+             
             swordDis = 50;
             attackState = false;
         }, this)
         
-        for(var i=0; i<enemies.length; i++)
+        for(let i=0; i<enemies.length; i++)
         {
-            enemies[i].moveEnemy(crystal);
+
+            enemies[i].moveEnemy();
         }
         
     }

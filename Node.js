@@ -3,7 +3,7 @@ class Node {
         this.x = x;
         this.y = y;
         this.jump = jump;
-        this.distance = 0;
+        
     }
     
     toString() {
