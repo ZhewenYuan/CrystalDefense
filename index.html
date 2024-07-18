@@ -94,7 +94,7 @@
     function create()
     {
 
-
+        
         totalEnemies = 50;
 
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
@@ -189,7 +189,8 @@
         plats[1].connectLeft(plats[2].rightSide, path);
 
     }
-
+    let canAttack;
+        let time = new Date();
     function update()
     {
         
@@ -245,15 +246,18 @@
         
         this.input.on('pointerdown', function (pointer)
         {
+            if (canAttack) {
+                swordDis = 75;
+                canAttack = false;
+                attackState = true;
+            }
             
-            swordDis = 75;
-
-            attackState = true;
             }, this)
         this.input.on('pointerup', function (pointer)
         {
              
             swordDis = 50;
+            canAttack = true;
             attackState = false;
         }, this)
         
