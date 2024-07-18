@@ -1,6 +1,7 @@
 class EnemySpawner 
 {
     TimerEvent;
+    totalEnemies
     constructor(delay,xLow,xHigh,y,enemies,scene,repeat)
     {
         this.TimerEvent = scene.time.addEvent({
@@ -13,9 +14,15 @@ class EnemySpawner
         
     addEnemy(lowerRange,upperRange, y,enemies)
     {
-        var x = Phaser.Math.Between(lowerRange,upperRange);
+        if(totalEnemies>0)
+        {
+            var x = Phaser.Math.Between(lowerRange,upperRange);
 
-        enemies.push(new Enemy(this, x, y,'enemy'))
+            enemies.push(new Enemy(this, x, y,'enemy'))
+            totalEnemies--
+            //console.log(totalEnemies)
+        }
+        
     }
     // add timer
     // lis
