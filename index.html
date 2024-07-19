@@ -51,7 +51,7 @@
 
     var game = new Phaser.Game(config);
     
-    var totalEnemies;
+  
     //Game Objects
     var platforms;
     var player;
@@ -91,14 +91,15 @@
 }
         
 
-    
-
+    var totalEnemies;
+    var numberEnemies;
+    let spawners;
     function create()
     {
 
-
-        totalEnemies = 50;
-
+        spawners = [];
+        totalEnemies = 20;
+        numberEnemies = totalEnemies;
 
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
   
@@ -110,11 +111,8 @@
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
-
-               
        
-       
-       crystal = new Crystal(this,924,433,'crystal');
+       crystal = new Crystal(this,plats[0].x,plats[0].y - 100,'crystal');
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
        //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
@@ -122,12 +120,14 @@
        player = new Player(this, 924, 100);
        
        counter = 0;   
-
-       spawn1 = new EnemySpawner(2000,plats[2],enemies,this, totalEnemies, path, crystal);
-        spawn2 = new EnemySpawner(1536, plats[0], enemies, this, totalEnemies, path, crystal);
-        spawn3 = new EnemySpawner(1783, plats[3], enemies, this, totalEnemies, path, crystal);
-        spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);
-
+        roundCount = 0;
+        
+        
+       spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
+        spawn2 = new EnemySpawner(5000,plats[1],enemies,this, totalEnemies, path, crystal);
+        spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
+        spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
+        
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
@@ -180,19 +180,22 @@
         
         platforms.create(924, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
         
-        platforms.create(250, 700, 'platform').setDisplaySize(500, 50).refreshBody();
-        
         platforms.create(1598, 300, 'platform').setDisplaySize(500, 50).refreshBody();
         
+        platforms.create(250, 700, 'platform').setDisplaySize(500, 50).refreshBody();
+        
         platforms.create(1598, 700, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        
         
         platforms.getChildren().forEach(val => {
             plats.push(new Platform(val.x, val.y, 500, path));
         });
         plats[0].connectRight(plats[1].leftSide, path);
-        plats[1].connectLeft(plats[2].rightSide, path);
-        plats[3].connectLeft(plats[1].rightSide, path);
+        plats[1].connectLeft(plats[3].rightSide, path);
+        plats[2].connectLeft(plats[1].rightSide, path);
         plats[4].connectLeft(plats[1].rightSide, path);
+        
     }
 
     function update()
@@ -254,18 +257,18 @@
         
         this.input.on('pointerdown', function (pointer)
         {
-            if (canAttack) {
+            
                 swordDis = 75;
-                canAttack = false;
+                
                 attackState = true;
-            }
+            
             
             }, this)
         this.input.on('pointerup', function (pointer)
         {
              
             swordDis = 50;
-            canAttack = true;
+            
             attackState = false;
         }, this)
         
@@ -276,7 +279,17 @@
         }
             }
         
-            
+        if (roundCount >= numberEnemies) {
+            numberEnemies *= 1.2;
+            roundCount = 0;
+            totalEnemies = numberEnemies;
+            console.log(totalEnemies);
+            spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
+            console.log(spawn1.timesRun);
+            //spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[0], enemies, this, Math.round(numberEnemies), path, crystal);
+            spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
+            spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
+        } 
         
     }
     
@@ -290,12 +303,13 @@
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
-
+    roundCount;
 
     function EnemyKilled(enemy)
     {
         if (attackState){
             //enemy.setVelocityY(-500);
+            roundCount++;
             counter++;
             enemy.disableBody(true,true)
             gui.setText('Kill Counter: ' + counter);

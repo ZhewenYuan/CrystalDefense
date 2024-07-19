@@ -1,7 +1,7 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite 
 {
 
-    constructor (scene, x ,y, Sprite) {
+    constructor (scene, x ,y, Sprite, spawner) {
         super(scene, x, y, Sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -12,6 +12,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.flipX = true;
         this.path = null;
         this.currentNode = null;
+        this.spawner = spawner;
     }
 /*  
     enemyWalk(event){
@@ -40,7 +41,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     
     moveEnemy()
     {
-        
         if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) { 
             
             if (this.y != this.path[this.nextNode].y) {
