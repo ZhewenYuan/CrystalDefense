@@ -21,8 +21,7 @@
 <body>
 
     <script>
-
-    let pgWidth = 1848;
+        let pgWidth = 1848;
     let pgHeight = 967;
     let swordDis = 50;
     let attackState = false;
@@ -52,6 +51,7 @@
     var game = new Phaser.Game(config);
     
     var totalEnemies;
+    var maxEnemies;
     //Game Objects
     var platforms;
     var player;
@@ -74,13 +74,14 @@
     var keys;
     var space;
         
-
+    var path;
+        
     function preload()
     {
-        this.load.image('sky', 'Assets/bgUpSc.png');
+        this.load.image('background', 'Assets/background1.png');
         this.load.image('platform', 'Assets/platform.png');
-        this.load.image('player', 'Assets/Knight.png');
-        this.load.image('crystal', 'Assets/crystal.PNG');
+        this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
+        this.load.image('crystal', 'Assets/crystal_sprite.png');
         this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
         this.load.image('sword', 'Assets/Knight Sword.png')
         
@@ -93,26 +94,41 @@
 
     function create()
     {
-        totalEnemies = 20;
+
+
+        totalEnemies = 500;
+        maxEnemies = totalEnemies;
+
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
-       let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
+  
+       path = new Path();
+
+
+       let background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background').setOrigin(0, 0);
+
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
-            
+               
+       
+       
+       crystal = new Crystal(this,200,283,'crystal');
 
-       counter = 0;
-       crystal = new Crystal(this,pgWidth-75,pgHeight-450,'crystal');
-        
+       //enemies.push(new Enemy(this, 200, 533,'enemy'))
+       //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
+       
+       player = new Player(this, 100, 100);
+
+    
+
+        spawn1 = new EnemySpawner(10,plats[2],enemies,this, totalEnemies, path, crystal);
+        spawn2 = new EnemySpawner(10, plats[1], enemies, this, totalEnemies, path, crystal);
+       
 
 
-       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, totalEnemies);
-       spawn2 = new EnemySpawner(2000,600,900,200,enemies,this,totalEnemies);        
+       
 
 
-       spawn1 = new EnemySpawner(1000,100,400,200,enemies,this, 5);
-
-       player = new Player(this, pgWidth - 1600, pgHeight - 200);
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
@@ -137,10 +153,11 @@
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
-       gui = this.add.text(25, 20, '', {fontSize: '32px', fill: '#f90000'});
-       crystalHealth = this.add.text(25, 75, '', {fontSize: '32px', fill: '#9f25c3'});
-       gameOver = this.add.text((pgWidth/2)-175, (pgHeight/2)-5, '', {fontSize: '70px', fill: '#da2828'});
-       gui.setText('Kill Counter: 0');
+       gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+
+       gui.setText('Enemies left: '+ totalEnemies);
        crystalHealth.setText('Crystal Health: 10');
         
        /*
@@ -150,22 +167,41 @@
        
     }
 
+    let plats;    
+        
     function createPlatforms(scene)
     {
+        plats = [];
+        
         platforms = scene.physics.add.staticGroup();
 
-        //basePlatform is the floor of the game
-        let basePlatform = platforms.create(game.scale.width/2, game.scale.height-30, 'platform');
-        basePlatform.setScale(4, 1).refreshBody(); //scales the base platform in the x axis to cover the entire floor
-                
-        platforms.create((pgWidth - 1600), (pgHeight - 650), 'platform'); //creates the upper left platform
-        platforms.create((pgWidth - 910), (pgHeight - 450), 'platform'); //creates the middle platform
-        platforms.create((pgWidth - 220), (pgHeight - 250), 'platform'); //creates the bottome right platform
+
+
+        platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        
+        platforms.create(350, 600, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.getChildren().forEach(val => {
+            plats.push(new Platform(val.x, val.y, 500, path));
+        });
+        plats[0].connectRight(plats[1].leftSide, path);
+        plats[1].connectLeft(plats[2].rightSide, path);
 
     }
 
     function update()
     {
+        
+        
+        if (player.y > 1200) 
+        {
+            gameOver.setText('Game Over');
+            console.log("GAME OVER");
+            game.destroy();
+            //this.gameOver();
+        }
         
         sword.y = player.y;
         
@@ -203,24 +239,37 @@
             player.setVelocityX(450);
             faceLeft = false;
         }
+        if (cursors.up.isDown || keys.W.isDown)
+        {
+            player.jump();
+        }
         
         this.input.on('pointerdown', function (pointer)
         {
+            
+            swordDis = 75;
 
-            console.log('down');
-            swordDis = 100;
             attackState = true;
             }, this)
         this.input.on('pointerup', function (pointer)
         {
-            console.log('up');   
+             
             swordDis = 50;
             attackState = false;
         }, this)
         
-        for(var i=0; i<enemies.length; i++)
+        for(let i=0; i<enemies.length; i++)
         {
-            enemies[i].moveEnemy(crystal);
+
+            enemies[i].moveEnemy();
+            if(enemies[i].body.checkWorldBounds())
+            {  
+                console.log("in world bounds")
+            //enemy.setVelocityY(-500);
+                maxEnemies--; 
+                gui.setText('Enemies left: ' + maxEnemies);
+                enemies[i].disableBody(true,true)
+            }
         }
         
     }
@@ -232,20 +281,25 @@
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
-
+    
 
     function EnemyKilled(enemy)
     {
+        
         if (attackState){
+            maxEnemies--;   
             //enemy.setVelocityY(-500);
-            counter++;
+            gui.setText('Enemies left: ' + maxEnemies);
             enemy.disableBody(true,true)
-            gui.setText('Enemies left: ' + totalEnemies);
-
             //console.log("gone")
             
         }
     }
+        
+     
+    
+        
+    
     
 
     </script>
