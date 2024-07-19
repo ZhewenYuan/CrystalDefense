@@ -63,7 +63,6 @@
         
     var gui;
     var crystalHealth
-    var gameOver;
     var instruction;
     var canAttack;
     var timedEvent;
@@ -79,6 +78,7 @@
 
     let bg;
     let background;
+    let gameOverBOOL = false
         
         
     let playerAnimations = {};   
@@ -106,6 +106,7 @@
         
     function create()
     {
+        enemies =[]
 
         spawners = [];
         totalEnemies = 20;
@@ -230,7 +231,7 @@
     }
         
     function update()
-        {   
+    {   
             //console.log(this.timedEvent.getProgress());
             
             if (keys.E.isDown && gameState === false){
@@ -238,155 +239,175 @@
                 instruction.setText('');
                 player.setGravityY(3000);
             }
-            if (gameState){
-                if (player.y > 1200) 
+        if (gameState)
+        {
+            if (player.y > 1200) 
             {
-            gameOver.setText('Game Over');
-            //console.log("GAME OVER");
-            game.destroy();
-            //this.gameOver();
-        }
+                gameOver.setText('Game Over');
+                for(let i=0; i<enemies.length; i++)
+                {
+                    enemies[i].disableBody(true,true)
+                }
+                //console.log("GAME OVER");
+                gameOverBOOL=true
+                gameState=false;
+                 //this.gameOver();
+            }
                       
         
-        sword.y = player.y;
-        
-        if (faceLeft){
-            sword.x = player.x + (swordDis * -1);
-            player.flipX = true;
-            sword.flipX = true;
-        }
-        else{
-            sword.x = player.x + swordDis;
-            player.flipX = false;
-            sword.flipX = false;
-        }
-        
-        //Player will not move in the x-axis unless a movement key is being pressed
-        player.setVelocityX(0);
-
-        //Player has "drag" on the x-axis meaning they slide a bit after an input
-        player.setDragX(400);
-        if (player.body.touching.down)
-        {
-            player.jumpCount=0;
-        }
-        //Handle player movements
-        if (cursors.left.isDown || keys .A.isDown)
-        {
-            player.setVelocityX(-450);
-            faceLeft = true;
-            player.play(playerAnimations['walking'],true);
-        }
-        if (cursors.right.isDown || keys.D.isDown)
-        {
-            player.setVelocityX(450);
-            faceLeft = false;
-            player.play(playerAnimations['walking'],true);
-        }
-        if (cursors.up.isDown || keys.W.isDown)
-        {
-            player.jump();
-        }
-                
-        if (!(cursors.left.isDown || keys .A.isDown || cursors.right.isDown || keys.D.isDown || cursors.up.isDown || keys.W.isDown))  {
-            player.play(playerAnimations['idle'],true);
-
-        }      
-        
-        this.input.on('pointerdown', function (pointer)
-        {
-
+            sword.y = player.y;
             
-                swordDis = 65;
-                canAttack = false;
-                attackState = true;
-                sword.play(swordAnimations['swing'],true);
-                
-
-        }, this)
-        
-        this.input.on('pointerup', function (pointer)
-        {
-            canAttack = true;
-            attackState = false;
-            sword.play(swordAnimations['swing_complete'],true);
+            if (faceLeft){
+                sword.x = player.x + (swordDis * -1);
+                player.flipX = true;
+                sword.flipX = true;
+            }
+            else{
+                sword.x = player.x + swordDis;
+                player.flipX = false;
+                sword.flipX = false;
+            }
             
-        }, this)
-        
-        for(let i=0; i<enemies.length; i++)
-        {
+            //Player will not move in the x-axis unless a movement key is being pressed
+            player.setVelocityX(0);
 
-            enemies[i].moveEnemy();
-
-        }
-        for(let i=0; i<enemies.length; i++)
-        {
-                if( enemies[i].y>1100)
+            //Player has "drag" on the x-axis meaning they slide a bit after an input
+            player.setDragX(400);
+            if (player.body.touching.down)
             {
-                EnemyDeath(enemies[i]);
-                enemies[i].setY(400)
+                player.jumpCount=0;
+            }
+            //Handle player movements
+            if (cursors.left.isDown || keys .A.isDown)
+            {
+                player.setVelocityX(-450);
+                faceLeft = true;
+                player.play(playerAnimations['walking'],true);
+            }
+            if (cursors.right.isDown || keys.D.isDown)
+            {
+                player.setVelocityX(450);
+                faceLeft = false;
+                player.play(playerAnimations['walking'],true);
+            }
+            if (cursors.up.isDown || keys.W.isDown)
+            {
+                player.jump();
+            }
+                    
+            if (!(cursors.left.isDown || keys .A.isDown || cursors.right.isDown || keys.D.isDown || cursors.up.isDown || keys.W.isDown))  {
+                player.play(playerAnimations['idle'],true);
+
+            }      
+            
+            this.input.on('pointerdown', function (pointer)
+            {
+
+                
+                    swordDis = 65;
+                    canAttack = false;
+                    attackState = true;
+                    sword.play(swordAnimations['swing'],true);
+                    
+
+            }, this)
+            
+            this.input.on('pointerup', function (pointer)
+            {
+                canAttack = true;
+                attackState = false;
+                sword.play(swordAnimations['swing_complete'],true);
+                
+            }, this)
+            
+            for(let i=0; i<enemies.length; i++)
+            {
+
+                enemies[i].moveEnemy();
+
+            }
+            for(let i=0; i<enemies.length; i++)
+            {
+                    if( enemies[i].y>1100)
+                {
+                    EnemyDeath(enemies[i]);
+                    enemies[i].setY(400)
+                }
+            }
+            if (maxEnemies <= 0) {
+                let newLocation = Phaser.Math.Between(0, 2);
+                while (newLocation === currentCrystal) {
+                    newLocation = Phaser.Math.Between(0, 2);
+                }
+                currentCrystal = newLocation;
+                crystal.disableBody(true, true);          
+                crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal', crystal.crystalHP);
+                this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
+
+                if (newLocation === 0) {
+                    spawn1.destroy();
+                    spawn2.destroy();
+                    spawn3.destroy();
+                    spawn4.destroy();
+                    spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
+                    spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
+                    spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
+                } else if (newLocation === 1) {
+                    spawn1.destroy();
+                    spawn2.destroy();
+                    spawn3.destroy();
+                    spawn4.destroy();
+                    spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
+                    spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[0], enemies, this, Math.round(numberEnemies), path, crystal);
+                    spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
+                    spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
+                } else if (newLocation === 2) {
+                    spawn1.destroy();
+                    spawn2.destroy();
+                    spawn3.destroy();
+                    spawn4.destroy();
+                    spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[0],enemies,this, Math.round(numberEnemies), path, crystal);
+                    spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
+                    spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
+                }
+                numberEnemies = Math.round(numberEnemies * 1.2);
+                maxEnemies = numberEnemies;
+                gui.setText("Enemies left: " + numberEnemies);
+                roundCount++;
+                totalEnemies = numberEnemies;
+                if(roundCount%3 == 0)
+                {
+                    bg = Phaser.Math.Between(0, 1);
+                    if(bg>0)
+                    {
+                            background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background2').setOrigin(0, 0).setDepth(-1)
+                    }
+                    else
+                    {
+                            background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background1').setOrigin(0, 0).setDepth(-1)
+                    }
+                }
             }
         }
-            }
+        else if(crystal.crystalHP <=0 || player.y>1200)
+        {
+            console.log("reset")
+            instruction.setText('Press E to Restart the Game')
+            
+        }
         else{
             instruction.setText('Press E to Start the Game');
         }
-        
-            
-        if (maxEnemies <= 0) {
-            let newLocation = Phaser.Math.Between(0, 2);
-            while (newLocation === currentCrystal) {
-                newLocation = Phaser.Math.Between(0, 2);
-            }
-            currentCrystal = newLocation;
-            crystal.disableBody(true, true);          
-            crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal', crystal.crystalHP);
-            this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
-
-            if (newLocation === 0) {
-                spawn1.destroy();
-                spawn2.destroy();
-                spawn3.destroy();
-                spawn4.destroy();
-                spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
-                spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
-            } else if (newLocation === 1) {
-                spawn1.destroy();
-                spawn2.destroy();
-                spawn3.destroy();
-                spawn4.destroy();
-                spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[0], enemies, this, Math.round(numberEnemies), path, crystal);
-                spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
-                spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
-            } else if (newLocation === 2) {
-                spawn1.destroy();
-                spawn2.destroy();
-                spawn3.destroy();
-                spawn4.destroy();
-                spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[0],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
-                spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
-            }
-            numberEnemies = Math.round(numberEnemies * 1.2);
-            maxEnemies = numberEnemies;
-            gui.setText("Enemies left: " + numberEnemies);
-            roundCount++;
-            totalEnemies = numberEnemies;
-            if(roundCount%3 == 0)
+        if (keys.E.isDown && gameOverBOOL== true )//&& gameState === false)
             {
-                bg = Phaser.Math.Between(0, 1);
-                if(bg>0)
-                {
-                        background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background2').setOrigin(0, 0).setDepth(-1)
-                }
-                else
-                {
-                        background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background1').setOrigin(0, 0).setDepth(-1)
-                }
+                console.log("reset 2")
+                gameOverBOOL =false
+                gameState = false;
+                this.scene.restart();
             }
-        } 
+        
+        
+             
         
     }
     
@@ -397,6 +418,7 @@
         EnemyDeath(enemy);
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
+        
         
     }
 
@@ -419,6 +441,7 @@
         gui.setText('Enemies left: ' + maxEnemies);
         
     }
+
         
     </script>
 
