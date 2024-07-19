@@ -109,6 +109,8 @@
     var totalEnemies;
     var numberEnemies;
     let spawners;
+    let currentCrystal;
+        
     function create()
     {
 
@@ -127,7 +129,7 @@
        createPlatforms(this);
        
 
-
+       currentCrystal = 1;
        crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal', 10);
 
 
@@ -354,7 +356,10 @@
             
         if (maxEnemies <= 0) {
             let newLocation = Phaser.Math.Between(0, 2);
-            
+            while (newLocation === currentCrystal) {
+                newLocation = Phaser.Math.Between(0, 2);
+            }
+            currentCrystal = newLocation;
             crystal.disableBody(true, true);          
             crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal', crystal.crystalHP);
             this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
