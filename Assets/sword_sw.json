@@ -72,10 +72,34 @@
         "y": 0.5
       }
     },
-    "sword_swing03": {
+    "sword_swing04": {
       "frame": {
         "x": 0,
         "y": 900,
+        "w": 400,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 60,
+        "w": 400,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "sword_swing03": {
+      "frame": {
+        "x": 0,
+        "y": 1260,
         "w": 460,
         "h": 220
       },
@@ -95,6 +119,30 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "sword_swing05": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 220,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {
@@ -104,7 +152,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 600,
-      "h": 1120
+      "h": 1480
     },
     "scale": 1
   }

@@ -6,6 +6,7 @@ class EnemySpawner
     
     
     constructor(delay,platform,enemies,scene,repeat, path, crystal) {
+        this.active = true;
         this.delay = delay;
         this.timesRun = 0;
         this.enemies = enemies;
@@ -19,6 +20,9 @@ class EnemySpawner
     }
         
     addEnemy(scene, platform, crystal, path) {
+        if (!this.active) {
+            return;
+        }
         this.timesRun += 1;
         
         if(totalEnemies>0 && gameState) {
@@ -30,6 +34,10 @@ class EnemySpawner
             //console.log(totalEnemies)
         }
         
+    }
+    
+    destroy() {
+        this.active = false;
     }
  
     // add timer
