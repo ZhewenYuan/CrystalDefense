@@ -71,7 +71,6 @@
         
     var gui;
     var crystalHealth
-    var counter;
     var gameOver;
     var instruction;
     var canAttack;
@@ -137,10 +136,10 @@
        player = new Player(this, 924, 100);
        
        counter = 0;   
-        roundCount = 0;
+       roundCount = 0;
         
         
-       spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
+        spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
         spawn2 = new EnemySpawner(5000,plats[1],enemies,this, totalEnemies, path, crystal);
         spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
         spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
@@ -334,13 +333,15 @@
         {
 
             enemies[i].moveEnemy();
-            // if(enemies[i].body.checkWorldBounds() && enemies[i].y>1000)
-            // {  
-            //     console.log("in world bounds")
-            //     maxEnemies--; 
-            //     gui.setText('Enemies left: ' + maxEnemies);
-            //     enemies[i].disableBody(true,true)
-            // }
+
+        }
+        for(let i=0; i<enemies.length; i++)
+        {
+                if( enemies[i].y>1100)
+            {
+                EnemyDeath(enemies[i]);
+                enemies[i].setY(400)
+            }
         }
             }
         else{
@@ -397,9 +398,10 @@
     function AttackCrystal(enemy)
     {
 
-        maxEnemies--;
-        gui.setText('Enemies left: ' + maxEnemies);
-        enemy.disableBody(true,true)
+
+        
+
+        EnemyDeath(enemy);
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
@@ -412,19 +414,17 @@
     {
         
         if (attackState){
-            maxEnemies--;   
-
             //enemy.setVelocityY(-500);
-
-            roundCount++;
-            counter++;
-
-            gui.setText('Enemies left: ' + maxEnemies);
-
-            enemy.disableBody(true,true)
+            EnemyDeath(enemy);
             //console.log("gone")
-            
         }
+    }
+    function EnemyDeath(enemy)
+    {
+        enemy.disableBody(true,true)
+        maxEnemies--;
+        gui.setText('Enemies left: ' + maxEnemies);
+        
     }
         
      
