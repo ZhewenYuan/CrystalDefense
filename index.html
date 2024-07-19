@@ -133,11 +133,10 @@
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
        //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
-       player = new Player(this, 924, -100);
+       player = new Player(this, 924, -65);
        
        counter = 0;   
        roundCount = 0;
-        
         
         spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
         spawn2 = new EnemySpawner(5000,plats[1],enemies,this, totalEnemies, path, crystal);
@@ -190,9 +189,7 @@
        var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 0, end: 3, zeroPad: 2}), repeat: 0, frameRate: 28 });
        swordAnimations['swing'] = swing;
        var swing_complete = this.anims.create({key: 'sword_sw', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 4, end: 5, zeroPad: 2}), repeat: 0, frameRate: 28 });
-       swordAnimations['swing_complete'] = swing_complete;
-        
-       
+       swordAnimations['swing_complete'] = swing_complete; 
             
        player.play(playerAnimations['idle']);
         
@@ -243,6 +240,7 @@
             if (keys.E.isDown && gameState === false){
                 gameState = true;
                 instruction.setText('');
+                player.setGravityY(3000);
             }
             
             
@@ -250,10 +248,12 @@
                 if (player.y > 1200) 
             {
             gameOver.setText('Game Over');
-            console.log("GAME OVER");
+            //console.log("GAME OVER");
             game.destroy();
             //this.gameOver();
         }
+                
+                
         
         sword.y = player.y;
         

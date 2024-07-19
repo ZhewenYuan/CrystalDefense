@@ -16,7 +16,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
     loseHP()
     {
         this.crystalHP--;
-        console.log(this.crystalHP);
+        //console.log(this.crystalHP);
         if (this.crystalHP <= 0 ) 
         {
             this.crystalHP = 0;
