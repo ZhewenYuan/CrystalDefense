@@ -60,6 +60,8 @@
     var spawn4;
 
     var sword;
+    var music;
+    var gameOverSound;
         
     var gui;
     var crystalHealth
@@ -76,6 +78,7 @@
     var space;
         
     var path;
+    var shatter;
         
         
     let playerAnimations = {};   
@@ -91,14 +94,18 @@
         this.load.image('crystal', 'Assets/crystal_final.png');    
         this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
         this.load.atlas('sword', 'Assets/sword_sw.png', 'Assets/sword_sw.json');
+        this.load.image('particle','Assets/particles.png');
 
         this.load.audio('theme', 'Assets/crystal.wav');
+        this.load.audio('break', 'Assets/shatter.mp3');
+        this.load.audio('gameOverSound', 'Assets/gameOverSound.mp3');
 }
         
     var totalEnemies;
     var numberEnemies;
     let spawners;
     let currentCrystal;
+
         
     function create()
     {
@@ -117,7 +124,6 @@
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
        
-
        currentCrystal = 1;
        crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal', 10);
 
@@ -130,11 +136,11 @@
        counter = 0;   
        roundCount = 0;
 
-        spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
+        spawn1 = new EnemySpawner(4000,plats[2],enemies,this, totalEnemies, path, crystal);
         spawn2 = new EnemySpawner(5000,plats[0],enemies,this, totalEnemies, path, crystal);
 
-        spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
-        spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
+        spawn3 = new EnemySpawner(3500, plats[3], enemies, this, totalEnemies, path, crystal);
+        spawn4 = new EnemySpawner(5500, plats[4], enemies, this, totalEnemies, path, crystal);
 
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -144,9 +150,11 @@
        space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
        space.on('down', player.jump); //calls jump function when space is pressed
         
-       let music = this.sound.add('theme');
+       music = this.sound.add('theme');
+       shatter = this.sound.add('break');
+       gameOverSound = this.sound.add('gameOverSound');
+
        music.loop = true;
-       music.play();
         
        sword = new Sword(this, player.x+swordDis, 1500);
        sword.x = player.x + swordDis;
@@ -165,7 +173,7 @@
        gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
        crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
        gameOver = this.add.text((pgWidth/2)-210, (pgHeight/2)-250, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
-
+        
        instruction = this.add.text((pgWidth/2)-365, (pgHeight/2)+150, '', {fontFamily: 'Bungee', fontSize: '50px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
 
        gui.setText('Enemies left: '+ totalEnemies);
@@ -185,7 +193,9 @@
        swordAnimations['swing_complete'] = swing_complete; 
             
        player.play(playerAnimations['idle']);    
-       
+       music.play();
+
+        
     }
 
     let plats;    
@@ -217,24 +227,26 @@
         plats[4].connectLeft(plats[1].rightSide, path);
         
     }
+
         
     function update()
         {   
             //console.log(this.timedEvent.getProgress());
             
-            if (keys.E.isDown && gameState === false){
+            if (keys.E.isDown  && gameState === false ){
                 gameState = true;
                 instruction.setText('');
                 player.setGravityY(3000);
             }
-            if (gameState){
-                if (player.y > 1200) 
+            if (gameState)
             {
-            gameOver.setText('Game Over');
-            //console.log("GAME OVER");
-            game.destroy();
-            //this.gameOver();
-        }
+                if (player.y > 1200) 
+                {
+                    gameOver.setText('Game Over');
+                    //console.log("GAME OVER");
+                    //game.destroy();
+                    //this.gameOver();
+                }
                       
         
         sword.y = player.y;
@@ -284,8 +296,6 @@
         
         this.input.on('pointerdown', function (pointer)
         {
-
-            
                 swordDis = 65;
                 canAttack = false;
                 attackState = true;
@@ -320,6 +330,13 @@
         else{
             instruction.setText('Press E to Start the Game');
         }
+            
+        if ((crystal.crystalHP === 0 || player.y > 1200) && (gameState === true)){
+            music.pause();
+            gameOverSound.play();
+            game.destroy();
+            gameState = false;
+        }    
         
             
         if (maxEnemies <= 0) {
@@ -374,6 +391,7 @@
         EnemyDeath(enemy);
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
+        shatter.play();
         
     }
 
