@@ -12,12 +12,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.flipX = true;
         this.path = null;
         this.currentNode = null;
-        'lavaMonster',
+        this.anims.create({key: 'lavaMonster',
+                frames: this.anims.generateFrameNames('lavaMonster_walking', 
+                {prefix: 'lavaMonster',
                 end: 5, zeroPad: 4}),
                 repeat: -1});
-this.anims.create({key: 'lavaMonster',
-             frames: this.anims.generateFrameNames('lavaMonster_walking', 
-                {prefix: 
+
     }
 /*  
     enemyWalk(event){
