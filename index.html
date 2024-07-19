@@ -34,6 +34,7 @@
         type: Phaser.AUTO,
         width: pgWidth,
         height: pgHeight,
+        pixelArt: true,
         physics: {
             default: 'arcade',
         },
@@ -71,7 +72,6 @@
         
     var gui;
     var crystalHealth
-    var counter;
     var gameOver;
     var instruction;
     var canAttack;
@@ -97,7 +97,7 @@
         this.load.image('background', 'Assets/background1.png');
         this.load.image('platform', 'Assets/platform_1.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
-        this.load.image('crystal', 'Assets/crystal_sprite.png');    
+        this.load.image('crystal', 'Assets/crystal_final.png');    
         this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
         this.load.atlas('sword', 'Assets/sword_sw.png', 'Assets/sword_sw.json');
 
@@ -128,7 +128,7 @@
        
 
 
-       crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal');
+       crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal', 10);
 
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
@@ -137,11 +137,13 @@
        player = new Player(this, 924, 100);
        
        counter = 0;   
-        roundCount = 0;
+       roundCount = 0;
         
         
+
        spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
         spawn2 = new EnemySpawner(5000,plats[0],enemies,this, totalEnemies, path, crystal);
+
         spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
         spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
 
@@ -185,20 +187,19 @@
        playerAnimations['idle'] = idle;
        var walk = this.anims.create({key: 'knight_walking', frames: this.anims.generateFrameNames('player', {prefix: 'knight_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 8 });
        playerAnimations['walking'] = walk;
-       var jump = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
-       playerAnimations['jumping'] = jump;
+       var jumps = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
+       playerAnimations['jumping'] = jumps;
         
        var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 0, end: 3, zeroPad: 2}), repeat: 0, frameRate: 28 });
        swordAnimations['swing'] = swing;
        var swing_complete = this.anims.create({key: 'sword_sw', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 4, end: 5, zeroPad: 2}), repeat: 0, frameRate: 28 });
        swordAnimations['swing_complete'] = swing_complete;
         
-       var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
-       enemyAnimations['enemy_walk'] = enemy_walk;
+       
             
        player.play(playerAnimations['idle']);
         
-       //enemies.play(enemyAnimations['enemy_walk']);
+       
         /*
        const camera = this.cameras.main;
        camera.postFX.addVignette(0.5, 0.5, 0.7);
@@ -335,25 +336,27 @@
         {
 
             enemies[i].moveEnemy();
-            // if(enemies[i].body.checkWorldBounds() && enemies[i].y>1000)
-            // {  
-            //     console.log("in world bounds")
-            //     maxEnemies--; 
-            //     gui.setText('Enemies left: ' + maxEnemies);
-            //     enemies[i].disableBody(true,true)
-            // }
+
+        }
+        for(let i=0; i<enemies.length; i++)
+        {
+                if( enemies[i].y>1100)
+            {
+                EnemyDeath(enemies[i]);
+                enemies[i].setY(400)
+            }
         }
             }
         else{
-            instruction.setText('Press E to Start the Game.');
+            instruction.setText('Press E to Start the Game');
         }
         
             
         if (maxEnemies <= 0) {
             let newLocation = Phaser.Math.Between(0, 2);
             
-            crystal.disableBody(true, true);
-            crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal');
+            crystal.disableBody(true, true);          
+            crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal', crystal.crystalHP);
             this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
 
             if (newLocation === 0) {
@@ -362,7 +365,6 @@
                 spawn3.destroy();
                 spawn4.destroy();
                 spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[1], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
             } else if (newLocation === 1) {
@@ -380,12 +382,12 @@
                 spawn3.destroy();
                 spawn4.destroy();
                 spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[0],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[1], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
             }
             numberEnemies = Math.round(numberEnemies * 1.2);
             maxEnemies = numberEnemies;
+            gui.setText("Enemies left: " + numberEnemies);
             roundCount = 0;
             totalEnemies = numberEnemies;
         } 
@@ -397,9 +399,11 @@
 
     function AttackCrystal(enemy)
     {
-        maxEnemies--;
-        gui.setText('Enemies left: ' + maxEnemies);
-        enemy.disableBody(true,true)
+
+
+        
+
+        EnemyDeath(enemy);
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
@@ -412,18 +416,17 @@
     {
         
         if (attackState){
-            maxEnemies--;   
             //enemy.setVelocityY(-500);
-
-            roundCount++;
-            counter++;
-
-            gui.setText('Enemies left: ' + maxEnemies);
-
-            enemy.disableBody(true,true)
+            EnemyDeath(enemy);
             //console.log("gone")
-            
         }
+    }
+    function EnemyDeath(enemy)
+    {
+        enemy.disableBody(true,true)
+        maxEnemies--;
+        gui.setText('Enemies left: ' + maxEnemies);
+        
     }
         
      
