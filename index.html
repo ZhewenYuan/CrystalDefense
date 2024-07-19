@@ -52,6 +52,7 @@
     var game = new Phaser.Game(config);
     
     var totalEnemies;
+    var maxEnemies;
     //Game Objects
     var platforms;
     var player;
@@ -90,7 +91,7 @@
         this.load.image('crystal', 'Assets/crystal_sprite.png');
         this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
         this.load.atlas('sword', 'Assets/sword_swing.png', 'Assets/sword_swing.json');
-    
+
         this.load.audio('theme', 'Assets/crystal.wav');
 }
         
@@ -101,13 +102,10 @@
     function create()
     {
 
+        totalEnemies = 50;
+        maxEnemies = totalEnemies;
 
-       totalEnemies = Infinity;
-         
-       console.log(window.innerWidth);
-       console.log(window.innerHeight);
-        
-  
+
        path = new Path();
 
 
@@ -117,18 +115,15 @@
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
        
-       crystal = new Crystal(this,150,283,'crystal');
+       crystal = new Crystal(this,924,433,'crystal');
 
-       //enemies.push(new Enemy(this, 200, 533,'enemy'))
-       //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
-       
-       player = new Player(this, 275, 100);
+       player = new Player(this, 924, 100);       
 
-        
-       counter = 0;
+        spawn1 = new EnemySpawner(1706, plats[0], enemies, this, totalEnemies, path, crystal);//top left
+        spawn2 = new EnemySpawner(2883, plats[3], enemies, this, totalEnemies, path, crystal);// top right
+        spawn3 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal)//bot left
+        spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);//bot right
 
-       spawn1 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal);
-       spawn2 = new EnemySpawner(1000, plats[1], enemies, this, totalEnemies, path, crystal);
 
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -153,15 +148,18 @@
     //         //enemies[i].play('walk')
     //     }
        
-        
+        //enemies.push(new Enemy(this, 1250, 0,'enemy'))
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
        gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+
        instruction = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
-       gui.setText('Kill Counter: 0');
+
+       gui.setText('Enemies left: '+ totalEnemies);
+
        crystalHealth.setText('Crystal Health: 10');
         
        var idle = this.anims.create({key: 'knight_idle', frames: this.anims.generateFrameNames('player', {prefix: 'knight_idle', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
@@ -190,23 +188,27 @@
         
         platforms = scene.physics.add.staticGroup();
 
-        platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
+        platforms.create(250, 300, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        platforms.create(1000, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        platforms.create(924, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
         
-        platforms.create(350, 700, 'platform').setDisplaySize(500, 50).refreshBody();
+        platforms.create(250, 700, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.create(1598, 300, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.create(1598, 700, 'platform').setDisplaySize(500, 50).refreshBody();
         
         platforms.getChildren().forEach(val => {
             plats.push(new Platform(val.x, val.y, 500, path));
         });
         plats[0].connectRight(plats[1].leftSide, path);
         plats[1].connectLeft(plats[2].rightSide, path);
-
+        plats[3].connectLeft(plats[1].rightSide, path);
+        plats[4].connectLeft(plats[1].rightSide, path);
     }
         
         
 
-        
     function update()
         {   
             
@@ -281,15 +283,18 @@
         
         this.input.on('pointerdown', function (pointer)
         {
+            if (canAttack) {
+                swordDis = 75;
+                canAttack = false;
+                attackState = true;
+            }
             
-            swordDis = 75;
-
-            attackState = true;
             }, this)
         this.input.on('pointerup', function (pointer)
         {
              
             swordDis = 50;
+            canAttack = true;
             attackState = false;
         }, this)
         
@@ -297,6 +302,13 @@
         {
 
             enemies[i].moveEnemy();
+            // if(enemies[i].body.checkWorldBounds() && enemies[i].y>1000)
+            // {  
+            //     console.log("in world bounds")
+            //     maxEnemies--; 
+            //     gui.setText('Enemies left: ' + maxEnemies);
+            //     enemies[i].disableBody(true,true)
+            // }
         }
             }
         else{
@@ -317,16 +329,16 @@
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
-
+    
 
     function EnemyKilled(enemy)
     {
+        
         if (attackState){
+            maxEnemies--;   
             //enemy.setVelocityY(-500);
-            counter++;
+            gui.setText('Enemies left: ' + maxEnemies);
             enemy.disableBody(true,true)
-            gui.setText('Kill Counter: ' + counter);
-
             //console.log("gone")
             
         }

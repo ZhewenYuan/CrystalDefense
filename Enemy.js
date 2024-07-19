@@ -12,6 +12,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.flipX = true;
         this.path = null;
         this.currentNode = null;
+        this.anims.create({key: 'lavaMonster',
+                frames: this.anims.generateFrameNames('lavaMonster_walking', 
+                {prefix: 'lavaMonster',
+                end: 5, zeroPad: 4}),
+                repeat: -1});
+
     }
 /*  
     enemyWalk(event){
@@ -41,9 +47,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     moveEnemy()
     {
         
-        if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) {
-            
-            
+        if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) { 
             
             if (this.y != this.path[this.nextNode].y) {
                 
@@ -67,18 +71,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
             }
         }
         
-        
-            if (this.x < this.path[this.nextNode].x) {
+        if (this.x < this.path[this.nextNode].x) {
                 
             this.setVelocityX(400);
-            } else {
-                this.setVelocityX(-400);
-            }
-        
-        
-
-    
-
+        } else {
+            this.setVelocityX(-400);
+        }
     }
     
     
