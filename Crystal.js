@@ -8,7 +8,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         this.setScale(0.225);
         this.setCollideWorldBounds(true);
         this.body.setImmovable(true);
-        this.crystalHP = 10;
+        this.crystalHP = 99999;
         this.sprite = sprite;
         this.targetY = y + 33;
     }
