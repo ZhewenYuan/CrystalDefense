@@ -21,18 +21,19 @@
 <body>
 
     <script>
-        let pgWidth = 1848;
-    let pgHeight = 967;
+    let pgWidth = 1848;
+    let pgHeight = 968;
     let swordDis = 50;
     let attackState = false;
     let faceLeft = false;
     let gameState = false;
+    let playerState = 0;
     //let pointer = this.input.activePointer;    
 
     var config = {
         type: Phaser.AUTO,
-        width: 1848,
-        height: 967,
+        width: pgWidth,
+        height: pgHeight,
         physics: {
             default: 'arcade',
         },
@@ -45,8 +46,7 @@
 
     };
         
-        console.log(pgWidth);
-        console.log(pgHeight);
+        
 
 
     var game = new Phaser.Game(config);
@@ -66,6 +66,7 @@
     var crystalHealth
     var counter;
     var gameOver;
+    var instruction;
 
     var Spawner;
 
@@ -77,19 +78,23 @@
     var path;
         
         
+    let playerAnimations = {};   
+    let enemyAnimations = {}
+    
+        
     function preload()
     {
         this.load.image('background', 'Assets/background1.png');
-        this.load.image('platform', 'Assets/platform_large.png');
+        this.load.image('platform', 'Assets/platform_1.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
         this.load.image('crystal', 'Assets/crystal_sprite.png');
-        this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
-        this.load.image('sword', 'Assets/Knight Sword.png')
-        
+        this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
+        this.load.atlas('sword', 'Assets/sword_swing.png', 'Assets/sword_swing.json');
     
         this.load.audio('theme', 'Assets/crystal.wav');
 }
         
+       
 
     
 
@@ -98,8 +103,10 @@
 
 
        totalEnemies = Infinity;
-
-        //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
+         
+       console.log(window.innerWidth);
+       console.log(window.innerHeight);
+        
   
        path = new Path();
 
@@ -109,26 +116,19 @@
 
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
-
-               
        
-       
-       crystal = new Crystal(this,200,283,'crystal');
+       crystal = new Crystal(this,150,283,'crystal');
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
        //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
-       player = new Player(this, 100, 100);
+       player = new Player(this, 275, 100);
 
         
        counter = 0;
 
-       
-        
-       
-
        spawn1 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal);
-        spawn2 = new EnemySpawner(1000, plats[1], enemies, this, totalEnemies, path, crystal);
+       spawn2 = new EnemySpawner(1000, plats[1], enemies, this, totalEnemies, path, crystal);
 
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -144,7 +144,7 @@
         
        sword = new Sword(this, player.x+swordDis, 0);
        sword.x = player.x + swordDis;
-       sword.y = 10000;
+       sword.y = 1500;
 
         
     //    for(var i=0; i<enemies.length; i++)
@@ -160,10 +160,22 @@
        gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       instruction = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        gui.setText('Kill Counter: 0');
        crystalHealth.setText('Crystal Health: 10');
         
-       /*
+       var idle = this.anims.create({key: 'knight_idle', frames: this.anims.generateFrameNames('player', {prefix: 'knight_idle', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       playerAnimations['idle'] = idle;
+       var walk = this.anims.create({key: 'knight_walking', frames: this.anims.generateFrameNames('player', {prefix: 'knight_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       playerAnimations['walking'] = walk;
+       var jump = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
+       playerAnimations['jumping'] = jump;
+       var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       enemyAnimations['enemy_walk'] = enemy_walk;
+            
+       player.play(playerAnimations['walking']);
+       //enemies.play(enemyAnimations['enemy_walk']);
+        /*
        const camera = this.cameras.main;
        camera.postFX.addVignette(0.5, 0.5, 0.7);
        */       
@@ -191,14 +203,18 @@
         plats[1].connectLeft(plats[2].rightSide, path);
 
     }
+        
+        
 
         
     function update()
         {   
             
-            if (keys.E.isDown){
+            if (keys.E.isDown && gameState === false){
                 gameState = true;
+                instruction.setText('');
             }
+            
             
             if (gameState){
                 if (player.y > 1200) 
@@ -215,6 +231,7 @@
             sword.x = player.x + (swordDis * -1);
             player.flipX = true;
             sword.flipX = true;
+
 
         }
         else{
@@ -238,17 +255,29 @@
         {
             player.setVelocityX(-450);
             faceLeft = true;
+            playerState = 1;
+            player.play(playerAnimations['walking'],true);
+            
         }
-
         if (cursors.right.isDown || keys.D.isDown)
         {
             player.setVelocityX(450);
             faceLeft = false;
+            playerState = 1;
+            player.play(playerAnimations['walking'],true);
+            
+            
         }
         if (cursors.up.isDown || keys.W.isDown)
         {
             player.jump();
+            playerState = 2;
         }
+                
+        if (!(cursors.left.isDown || keys .A.isDown || cursors.right.isDown || keys.D.isDown || cursors.up.isDown || keys.W.isDown))  {
+            player.play(playerAnimations['idle'],true);
+
+        }      
         
         this.input.on('pointerdown', function (pointer)
         {
@@ -270,6 +299,9 @@
             enemies[i].moveEnemy();
         }
             }
+        else{
+            instruction.setText('Press E to Start the Game.');
+        }
         
             
         

@@ -1,0 +1,111 @@
+{
+  "frames": {
+    "sword_swing00": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 220,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "sword_swing02": {
+      "frame": {
+        "x": 0,
+        "y": 480,
+        "w": 460,
+        "h": 420
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 460,
+        "h": 420
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "sword_swing01": {
+      "frame": {
+        "x": 220,
+        "y": 0,
+        "w": 380,
+        "h": 400
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 60,
+        "y": 20,
+        "w": 380,
+        "h": 400
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "sword_swing03": {
+      "frame": {
+        "x": 0,
+        "y": 900,
+        "w": 460,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 240,
+        "w": 460,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "sword_swing.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 600,
+      "h": 1120
+    },
+    "scale": 1
+  }
+}

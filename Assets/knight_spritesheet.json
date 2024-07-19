@@ -1,6 +1,7 @@
 {
-  "frames": {
-    "knight_jumping06": {
+  "frames": [
+    {
+      "filename": "knight_jumping06",
       "frame": {
         "x": 0,
         "y": 0,
@@ -24,7 +25,8 @@
         "y": 0.5
       }
     },
-    "knight_jumping07": {
+    {
+      "filename": "knight_jumping07",
       "frame": {
         "x": 0,
         "y": 500,
@@ -48,7 +50,8 @@
         "y": 0.5
       }
     },
-    "knight_walking01": {
+    {
+      "filename": "knight_walking01",
       "frame": {
         "x": 0,
         "y": 1000,
@@ -72,7 +75,8 @@
         "y": 0.5
       }
     },
-    "knight_walking02": {
+    {
+      "filename": "knight_walking02",
       "frame": {
         "x": 0,
         "y": 1480,
@@ -96,7 +100,8 @@
         "y": 0.5
       }
     },
-    "knight_walking03": {
+    {
+      "filename": "knight_walking03",
       "frame": {
         "x": 300,
         "y": 0,
@@ -120,7 +125,8 @@
         "y": 0.5
       }
     },
-    "knight_idle00": {
+    {
+      "filename": "knight_idle00",
       "frame": {
         "x": 300,
         "y": 480,
@@ -144,7 +150,8 @@
         "y": 0.5
       }
     },
-    "knight_idle01": {
+    {
+      "filename": "knight_idle01",
       "frame": {
         "x": 320,
         "y": 960,
@@ -168,7 +175,8 @@
         "y": 0.5
       }
     },
-    "knight_idle02": {
+    {
+      "filename": "knight_idle02",
       "frame": {
         "x": 600,
         "y": 480,
@@ -192,7 +200,8 @@
         "y": 0.5
       }
     },
-    "knight_idle03": {
+    {
+      "filename": "knight_idle03",
       "frame": {
         "x": 620,
         "y": 0,
@@ -216,7 +225,8 @@
         "y": 0.5
       }
     },
-    "knight_idle04": {
+    {
+      "filename": "knight_idle04",
       "frame": {
         "x": 320,
         "y": 1440,
@@ -240,7 +250,8 @@
         "y": 0.5
       }
     },
-    "knight_idle05": {
+    {
+      "filename": "knight_idle05",
       "frame": {
         "x": 620,
         "y": 960,
@@ -264,7 +275,8 @@
         "y": 0.5
       }
     },
-    "knight_jumping00": {
+    {
+      "filename": "knight_jumping00",
       "frame": {
         "x": 900,
         "y": 480,
@@ -288,7 +300,8 @@
         "y": 0.5
       }
     },
-    "knight_jumping01": {
+    {
+      "filename": "knight_jumping01",
       "frame": {
         "x": 920,
         "y": 0,
@@ -312,7 +325,8 @@
         "y": 0.5
       }
     },
-    "knight_jumping02": {
+    {
+      "filename": "knight_jumping02",
       "frame": {
         "x": 620,
         "y": 1440,
@@ -336,33 +350,10 @@
         "y": 0.5
       }
     },
-    "knight_walking00": {
+    {
+      "filename": "knight_walking00",
       "frame": {
         "x": 1220,
-        "y": 0,
-        "w": 300,
-        "h": 480
-      },
-      "rotated": true,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 20,
-        "y": 0,
-        "w": 300,
-        "h": 480
-      },
-      "sourceSize": {
-        "w": 320,
-        "h": 480
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "knight_walking04": {
-      "frame": {
-        "x": 1700,
         "y": 0,
         "w": 300,
         "h": 480
@@ -384,14 +375,15 @@
         "y": 0.5
       }
     },
-    "knight_walking05": {
+    {
+      "filename": "knight_walking04",
       "frame": {
-        "x": 1220,
-        "y": 300,
+        "x": 1520,
+        "y": 0,
         "w": 300,
         "h": 480
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 20,
@@ -408,9 +400,35 @@
         "y": 0.5
       }
     },
-    "knight_jumping05": {
+    {
+      "filename": "knight_walking05",
       "frame": {
-        "x": 1700,
+        "x": 1200,
+        "y": 480,
+        "w": 300,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 0,
+        "w": 300,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "knight_jumping05",
+      "frame": {
+        "x": 1500,
         "y": 480,
         "w": 300,
         "h": 440
@@ -432,14 +450,15 @@
         "y": 0.5
       }
     },
-    "knight_jumping03": {
+    {
+      "filename": "knight_jumping03",
       "frame": {
-        "x": 1200,
-        "y": 600,
+        "x": 1500,
+        "y": 920,
         "w": 300,
         "h": 420
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
@@ -456,14 +475,15 @@
         "y": 0.5
       }
     },
-    "knight_jumping04": {
+    {
+      "filename": "knight_jumping04",
       "frame": {
-        "x": 1200,
-        "y": 900,
+        "x": 920,
+        "y": 960,
         "w": 300,
         "h": 400
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
@@ -480,14 +500,14 @@
         "y": 0.5
       }
     }
-  },
+  ],
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
     "image": "knight_spritesheet.png",
     "format": "RGBA8888",
     "size": {
-      "w": 2000,
+      "w": 1820,
       "h": 1960
     },
     "scale": 1
