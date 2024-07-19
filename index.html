@@ -84,8 +84,11 @@
         this.load.image('platform', 'Assets/platform_large.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
         this.load.image('crystal', 'Assets/crystal_sprite.png');
-        this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
         this.load.image('sword', 'Assets/Knight Sword.png')
+        
+        // animations
+        this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');  
+
         
     
         this.load.audio('theme', 'Assets/crystal.wav');
@@ -98,7 +101,7 @@
     {
 
 
-        totalEnemies = 500;
+        totalEnemies = 50;
         maxEnemies = totalEnemies;
 
 
@@ -117,18 +120,16 @@
        
        crystal = new Crystal(this,924,433,'crystal');
 
-       //enemies.push(new Enemy(this, 200, 533,'enemy'))
-       //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
+       
        
 
        player = new Player(this, 924, 100);       
        counter = 0;   
-
-
-       spawn1 = new EnemySpawner(2000,plats[2],enemies,this, totalEnemies, path, crystal);
-        spawn2 = new EnemySpawner(1536, plats[0], enemies, this, totalEnemies, path, crystal);
-        spawn3 = new EnemySpawner(1783, plats[3], enemies, this, totalEnemies, path, crystal);
-        spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);
+        //enemies.push(new Enemy(this,700,1000,'enemy'))
+       // spawn1 = new EnemySpawner(1306, plats[0], enemies, this, totalEnemies, path, crystal);//top left
+        spawn2 = new EnemySpawner(183, plats[3], enemies, this, totalEnemies, path, crystal);// top right
+        //spawn3 = new EnemySpawner(2000,plats[2],enemies,this, totalEnemies, path, crystal)//bot left
+        spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);//bot right
 
 
        this.physics.add.collider(player, platforms);
@@ -154,7 +155,7 @@
     //         //enemies[i].play('walk')
     //     }
        
-        
+        //enemies.push(new Enemy(this, 1250, 0,'enemy'))
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
@@ -277,10 +278,9 @@
         {
 
             enemies[i].moveEnemy();
-            // if(enemies[i].body.checkWorldBounds())
+            // if(enemies[i].body.checkWorldBounds() && enemies[i].y>1000)
             // {  
             //     console.log("in world bounds")
-            // //enemy.setVelocityY(-500);
             //     maxEnemies--; 
             //     gui.setText('Enemies left: ' + maxEnemies);
             //     enemies[i].disableBody(true,true)
