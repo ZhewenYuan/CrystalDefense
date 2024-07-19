@@ -120,29 +120,16 @@
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
        //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
-<<<<<<< HEAD
-       player = new Player(this, 100, 100);
 
-    
-
-        spawn1 = new EnemySpawner(10,plats[2],enemies,this, totalEnemies, path, crystal);
-        spawn2 = new EnemySpawner(10, plats[1], enemies, this, totalEnemies, path, crystal);
-       
-
-
-=======
-       player = new Player(this, 924, 100);
->>>>>>> eec36900d6d5857213534aea75c182aa122015e5
-       
+       player = new Player(this, 924, 100);       
        counter = 0;   
 
-<<<<<<< HEAD
-=======
+
        spawn1 = new EnemySpawner(2000,plats[2],enemies,this, totalEnemies, path, crystal);
         spawn2 = new EnemySpawner(1536, plats[0], enemies, this, totalEnemies, path, crystal);
         spawn3 = new EnemySpawner(1783, plats[3], enemies, this, totalEnemies, path, crystal);
         spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);
->>>>>>> eec36900d6d5857213534aea75c182aa122015e5
+
 
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
@@ -290,14 +277,14 @@
         {
 
             enemies[i].moveEnemy();
-            if(enemies[i].body.checkWorldBounds())
-            {  
-                console.log("in world bounds")
-            //enemy.setVelocityY(-500);
-                maxEnemies--; 
-                gui.setText('Enemies left: ' + maxEnemies);
-                enemies[i].disableBody(true,true)
-            }
+            // if(enemies[i].body.checkWorldBounds())
+            // {  
+            //     console.log("in world bounds")
+            // //enemy.setVelocityY(-500);
+            //     maxEnemies--; 
+            //     gui.setText('Enemies left: ' + maxEnemies);
+            //     enemies[i].disableBody(true,true)
+            // }
         }
             }
         
