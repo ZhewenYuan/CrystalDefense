@@ -128,7 +128,7 @@
        
 
 
-       crystal = new Crystal(this,plats[0].x,plats[0].y - 100,'crystal');
+       crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal');
 
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
@@ -141,7 +141,7 @@
         
         
        spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
-        spawn2 = new EnemySpawner(5000,plats[1],enemies,this, totalEnemies, path, crystal);
+        spawn2 = new EnemySpawner(5000,plats[0],enemies,this, totalEnemies, path, crystal);
         spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
         spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
 
