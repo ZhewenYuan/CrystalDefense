@@ -6,28 +6,40 @@ class EnemySpawner
     
     
     constructor(delay,platform,enemies,scene,repeat, path, crystal) {
-        
+        this.active = true;
+        this.delay = delay;
+        this.timesRun = 0;
+        this.enemies = enemies;
+        this.scene = scene;
         this.TimerEvent = scene.time.addEvent({
             delay,
-            callback: this.addEnemy, 
-            args :[enemies, platform, crystal, path],
+            callback: () => this.addEnemy(scene, platform, crystal, path), 
             callbackScope: scene,
             repeat});
         
     }
         
-    addEnemy(enemies, platform, crystal, path) {
+    addEnemy(scene, platform, crystal, path) {
+        if (!this.active) {
+            return;
+        }
+        this.timesRun += 1;
         
         if(totalEnemies>0 && gameState) {
             var x = Phaser.Math.Between(1,platform.nodes.length - 2);
 
-            enemies.push(new Enemy(this, platform.nodes[x].x, platform.y - 67,'enemy'));
-            enemies[enemies.length - 1].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
+            this.enemies.push(new Enemy(scene, platform.nodes[x].x, platform.y - 67,'enemy', this));
+            this.enemies[this.enemies.length - 1].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.targetY));
             totalEnemies--;
             //console.log(totalEnemies)
         }
         
     }
+    
+    destroy() {
+        this.active = false;
+    }
+ 
     // add timer
     // lis
 } 

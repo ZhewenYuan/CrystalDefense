@@ -10,6 +10,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         this.body.setImmovable(true);
         this.crystalHP = 10;
         this.sprite = sprite;
+        this.targetY = y + 33;
     }
     
     loseHP()
@@ -29,4 +30,6 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         {
             scene.tweens.add({ targets: this, x: xDist, y: yDist, duration: time, ease: 'Sine.easeInOut', repeat: -1, yoyo: true });
         }
+    
+    
 }
