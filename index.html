@@ -133,7 +133,7 @@
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
        //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
-       player = new Player(this, 924, 100);
+       player = new Player(this, 924, -100);
        
        counter = 0;   
        roundCount = 0;
@@ -170,11 +170,11 @@
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
-       gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
-       crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
-       gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
+       crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
+       gameOver = this.add.text((pgWidth/2)-210, (pgHeight/2)-250, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
 
-       instruction = this.add.text((pgWidth/2)-385, (pgHeight/2)+150, '', {fontFamily: 'Bungee', fontSize: '50px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       instruction = this.add.text((pgWidth/2)-365, (pgHeight/2)+150, '', {fontFamily: 'Bungee', fontSize: '50px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '3', stroke: '#000000'});
 
        gui.setText('Enemies left: '+ totalEnemies);
 
