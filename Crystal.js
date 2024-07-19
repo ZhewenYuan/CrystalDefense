@@ -12,19 +12,19 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         this.crystalHP = hp;
         this.sprite = sprite;
         this.targetY = y + 33;
+        this.addTween(scene, this.x, this.y-50, 1000);
     }
     
     loseHP()
     {
         this.crystalHP--;
         //console.log(this.crystalHP);
+        
         if (this.crystalHP <= 0 ) 
         {
             this.crystalHP = 0;
             gameOver.setText('Game Over');
             console.log("GAME OVER");
-            
-            
         }
     }
     addTween(scene, xDist, yDist, time) 
