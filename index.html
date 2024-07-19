@@ -21,18 +21,19 @@
 <body>
 
     <script>
-        let pgWidth = 1848;
-    let pgHeight = 967;
+    let pgWidth = 1848;
+    let pgHeight = 968;
     let swordDis = 50;
     let attackState = false;
     let faceLeft = false;
     let gameState = false;
+    let playerState = 0;
     //let pointer = this.input.activePointer;    
 
     var config = {
         type: Phaser.AUTO,
-        width: 1848,
-        height: 967,
+        width: pgWidth,
+        height: pgHeight,
         physics: {
             default: 'arcade',
         },
@@ -45,13 +46,17 @@
 
     };
         
-        console.log(pgWidth);
-        console.log(pgHeight);
+        
 
 
     var game = new Phaser.Game(config);
     
+
   
+
+    var totalEnemies;
+    var maxEnemies;
+
     //Game Objects
     var platforms;
     var player;
@@ -66,6 +71,8 @@
     var crystalHealth
     var counter;
     var gameOver;
+    var instruction;
+    var canAttack;
 
     var Spawner;
 
@@ -77,19 +84,24 @@
     var path;
         
         
+    let playerAnimations = {};   
+    let enemyAnimations = {}
+    let swordAnimations = {};
+    
+        
     function preload()
     {
         this.load.image('background', 'Assets/background1.png');
-        this.load.image('platform', 'Assets/platform_large.png');
+        this.load.image('platform', 'Assets/platform_1.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
         this.load.image('crystal', 'Assets/crystal_sprite.png');
-        this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
-        this.load.image('sword', 'Assets/Knight Sword.png')
-        
-    
+        this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
+        this.load.atlas('sword', 'Assets/sword_swing.png', 'Assets/sword_swing.json');
+
         this.load.audio('theme', 'Assets/crystal.wav');
 }
         
+       
 
     var totalEnemies;
     var numberEnemies;
@@ -99,10 +111,9 @@
 
         spawners = [];
         totalEnemies = 20;
+        maxEnemies = totalEnemies;
         numberEnemies = totalEnemies;
 
-        //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
-  
        path = new Path();
 
 
@@ -112,6 +123,7 @@
        //Create the platforms and the player character set to collide with the platforms
        createPlatforms(this);
        
+
        crystal = new Crystal(this,plats[0].x,plats[0].y - 100,'crystal');
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
@@ -127,7 +139,7 @@
         spawn2 = new EnemySpawner(5000,plats[1],enemies,this, totalEnemies, path, crystal);
         spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
         spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
-        
+
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
@@ -140,9 +152,8 @@
        music.loop = true;
        music.play();
         
-       sword = new Sword(this, player.x+swordDis, 0);
+       sword = new Sword(this, player.x+swordDis, 1500);
        sword.x = player.x + swordDis;
-       sword.y = 10000;
 
         
     //    for(var i=0; i<enemies.length; i++)
@@ -151,17 +162,38 @@
     //         //enemies[i].play('walk')
     //     }
        
-        
+        //enemies.push(new Enemy(this, 1250, 0,'enemy'))
        this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
        this.physics.add.overlap(enemies,sword, EnemyKilled ,null,this); 
        
        gui = this.add.text(25, 20, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#f90000', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
-       gui.setText('Kill Counter: 0');
+
+       instruction = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+
+       gui.setText('Enemies left: '+ totalEnemies);
+
        crystalHealth.setText('Crystal Health: 10');
         
-       /*
+       var idle = this.anims.create({key: 'knight_idle', frames: this.anims.generateFrameNames('player', {prefix: 'knight_idle', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       playerAnimations['idle'] = idle;
+       var walk = this.anims.create({key: 'knight_walking', frames: this.anims.generateFrameNames('player', {prefix: 'knight_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 8 });
+       playerAnimations['walking'] = walk;
+       var jump = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
+       playerAnimations['jumping'] = jump;
+        
+       var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', end: 3, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       swordAnimations['swing'] = sword;
+        
+       var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       enemyAnimations['enemy_walk'] = enemy_walk;
+            
+       player.play(playerAnimations['idle']);
+       sword.play(swordAnimations['swing']);
+        
+       //enemies.play(enemyAnimations['enemy_walk']);
+        /*
        const camera = this.cameras.main;
        camera.postFX.addVignette(0.5, 0.5, 0.7);
        */       
@@ -197,13 +229,17 @@
         plats[4].connectLeft(plats[1].rightSide, path);
         
     }
+        
+        
 
     function update()
         {   
             
-            if (keys.E.isDown){
+            if (keys.E.isDown && gameState === false){
                 gameState = true;
+                instruction.setText('');
             }
+            
             
             if (gameState){
                 if (player.y > 1200) 
@@ -220,6 +256,7 @@
             sword.x = player.x + (swordDis * -1);
             player.flipX = true;
             sword.flipX = true;
+
 
         }
         else{
@@ -243,17 +280,26 @@
         {
             player.setVelocityX(-450);
             faceLeft = true;
+            player.play(playerAnimations['walking'],true);
+            
         }
-
         if (cursors.right.isDown || keys.D.isDown)
         {
             player.setVelocityX(450);
             faceLeft = false;
+            player.play(playerAnimations['walking'],true);
+            
+            
         }
         if (cursors.up.isDown || keys.W.isDown)
         {
             player.jump();
         }
+                
+        if (!(cursors.left.isDown || keys .A.isDown || cursors.right.isDown || keys.D.isDown || cursors.up.isDown || keys.W.isDown))  {
+            player.play(playerAnimations['idle'],true);
+
+        }      
         
         this.input.on('pointerdown', function (pointer)
         {
@@ -261,9 +307,8 @@
                 swordDis = 75;
                 
                 attackState = true;
-            
-            
-            }, this)
+                
+        }, this)
         this.input.on('pointerup', function (pointer)
         {
              
@@ -276,11 +321,22 @@
         {
 
             enemies[i].moveEnemy();
+            // if(enemies[i].body.checkWorldBounds() && enemies[i].y>1000)
+            // {  
+            //     console.log("in world bounds")
+            //     maxEnemies--; 
+            //     gui.setText('Enemies left: ' + maxEnemies);
+            //     enemies[i].disableBody(true,true)
+            // }
         }
             }
+        else{
+            instruction.setText('Press E to Start the Game.');
+        }
         
-        if (roundCount >= numberEnemies) {
+        if (maxEnemies === 0) {
             numberEnemies *= 1.2;
+            maxEnemies = numberEnemies;
             roundCount = 0;
             totalEnemies = numberEnemies;
             console.log(totalEnemies);
@@ -298,22 +354,30 @@
 
     function AttackCrystal(enemy)
     {
+        maxEnemies--;
+        gui.setText('Enemies left: ' + maxEnemies);
         enemy.disableBody(true,true)
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
         
     }
+
     roundCount;
+
 
     function EnemyKilled(enemy)
     {
+        
         if (attackState){
+            maxEnemies--;   
             //enemy.setVelocityY(-500);
+
             roundCount++;
             counter++;
-            enemy.disableBody(true,true)
-            gui.setText('Kill Counter: ' + counter);
 
+            gui.setText('Enemies left: ' + maxEnemies);
+
+            enemy.disableBody(true,true)
             //console.log("gone")
             
         }

@@ -24,7 +24,6 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
             console.log("GAME OVER");
             
             game.destroy();
-            //this.gameOver();ssss
         }
     }
     addTween(scene, xDist, yDist, time) 
