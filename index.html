@@ -85,6 +85,9 @@
     var space;
         
     var path;
+
+    let bg;
+    let background;
         
         
     let playerAnimations = {};   
@@ -94,7 +97,8 @@
         
     function preload()
     {
-        this.load.image('background', 'Assets/background1.png');
+        this.load.image('background1', 'Assets/background1.png');
+        this.load.image('background2', 'Assets/background2.png');
         this.load.image('platform', 'Assets/platform_1.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
         this.load.image('crystal', 'Assets/crystal_final.png');    
@@ -119,8 +123,15 @@
 
        path = new Path();
 
-
-       let background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background').setOrigin(0, 0);
+       bg = Phaser.Math.Between(0, 1);
+       if(bg>0)
+       {
+            background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background2').setOrigin(0, 0).setDepth(-1)
+       }
+       else
+       {
+            background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background1').setOrigin(0, 0).setDepth(-1)
+       }
 
 
        //Create the platforms and the player character set to collide with the platforms
@@ -388,8 +399,20 @@
             numberEnemies = Math.round(numberEnemies * 1.2);
             maxEnemies = numberEnemies;
             gui.setText("Enemies left: " + numberEnemies);
-            roundCount = 0;
+            roundCount++;
             totalEnemies = numberEnemies;
+            if(roundCount%3 == 0)
+            {
+                bg = Phaser.Math.Between(0, 1);
+                if(bg>0)
+                {
+                        background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background2').setOrigin(0, 0).setDepth(-1)
+                }
+                else
+                {
+                        background = this.add.tileSprite(0, 0, pgWidth, pgHeight, 'background1').setOrigin(0, 0).setDepth(-1)
+                }
+            }
         } 
         
     }
@@ -409,7 +432,7 @@
         
     }
 
-    roundCount;
+    
 
 
     function EnemyKilled(enemy)
