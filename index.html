@@ -23,7 +23,7 @@
     <script>
     let pgWidth = 1848;
     let pgHeight = 968;
-    let swordDis = 50;
+    let swordDis = 65;
     let attackState = false;
     let faceLeft = false;
     let gameState = false;
@@ -69,6 +69,7 @@
     var gameOver;
     var instruction;
     var canAttack;
+    var timedEvent;
 
     var Spawner;
 
@@ -90,9 +91,9 @@
         this.load.image('background', 'Assets/background1.png');
         this.load.image('platform', 'Assets/platform_1.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
-        this.load.image('crystal', 'Assets/crystal_sprite.png');
+        this.load.image('crystal', 'Assets/crystal_sprite.png');    
         this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
-        this.load.atlas('sword', 'Assets/sword_swing.png', 'Assets/sword_swing.json');
+        this.load.atlas('sword', 'Assets/sword_sw.png', 'Assets/sword_sw.json');
 
         this.load.audio('theme', 'Assets/crystal.wav');
 }
@@ -121,10 +122,10 @@
 
        player = new Player(this, 924, 100);       
 
-        spawn1 = new EnemySpawner(1706, plats[0], enemies, this, totalEnemies, path, crystal);//top left
-        spawn2 = new EnemySpawner(2883, plats[3], enemies, this, totalEnemies, path, crystal);// top right
-        spawn3 = new EnemySpawner(1000,plats[2],enemies,this, totalEnemies, path, crystal)//bot left
-        spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);//bot right
+        spawn1 = new EnemySpawner(5406, plats[0], enemies, this, totalEnemies, path, crystal);//top left
+        spawn2 = new EnemySpawner(4883, plats[3], enemies, this, totalEnemies, path, crystal);// top right
+        spawn3 = new EnemySpawner(4000,plats[2],enemies,this, totalEnemies, path, crystal)//bot left
+        spawn4 = new EnemySpawner(4494, plats[4], enemies, this, totalEnemies, path, crystal);//bot right
 
 
        this.physics.add.collider(player, platforms);
@@ -157,7 +158,7 @@
        crystalHealth = this.add.text(25, 75, '', {fontFamily: 'Bungee', fontSize: '32px', fill: '#9f25c3', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
        gameOver = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#da2828', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
 
-       instruction = this.add.text((pgWidth/2)-205, (pgHeight/2)+40, '', {fontFamily: 'Bungee', fontSize: '70px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
+       instruction = this.add.text((pgWidth/2)-385, (pgHeight/2)+150, '', {fontFamily: 'Bungee', fontSize: '50px', fill: '#ffffff', fontStyle: 'bold', strokeThickness: '1', stroke: '#000000'});
 
        gui.setText('Enemies left: '+ totalEnemies);
 
@@ -170,14 +171,15 @@
        var jump = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
        playerAnimations['jumping'] = jump;
         
-       var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', end: 3, zeroPad: 2}), repeat: -1, frameRate: 5 });
-       swordAnimations['swing'] = sword;
+       var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 0, end: 3, zeroPad: 2}), repeat: 0, frameRate: 28 });
+       swordAnimations['swing'] = swing;
+       var swing_complete = this.anims.create({key: 'sword_sw', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 4, end: 5, zeroPad: 2}), repeat: 0, frameRate: 28 });
+       swordAnimations['swing_complete'] = swing_complete;
         
        var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
        enemyAnimations['enemy_walk'] = enemy_walk;
             
        player.play(playerAnimations['idle']);
-       sword.play(swordAnimations['swing']);
         
        //enemies.play(enemyAnimations['enemy_walk']);
         /*
@@ -197,7 +199,7 @@
 
         platforms.create(250, 300, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        platforms.create(924, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        platforms.create(924, 500, 'platform').setDisplaySize(500, 50).refreshBody(); 
         
         platforms.create(250, 700, 'platform').setDisplaySize(500, 50).refreshBody();
         
@@ -218,6 +220,7 @@
 
     function update()
         {   
+            //console.log(this.timedEvent.getProgress());
             
             if (keys.E.isDown && gameState === false){
                 gameState = true;
@@ -287,20 +290,21 @@
         
         this.input.on('pointerdown', function (pointer)
         {
-            if (canAttack) {
-                swordDis = 75;
                 canAttack = false;
                 attackState = true;
+                sword.play(swordAnimations['swing'],true);
                 
-            }
+                
+                
+            
             
             }, this)
         this.input.on('pointerup', function (pointer)
         {
-             
-            swordDis = 50;
             canAttack = true;
             attackState = false;
+            sword.play(swordAnimations['swing_complete'],true);
+            
         }, this)
         
         for(let i=0; i<enemies.length; i++)
