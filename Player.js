@@ -10,7 +10,8 @@ class Player extends Phaser.Physics.Arcade.Sprite
         this.setScale(0.25);
         this.setSize(100, 425);
         this.setCollideWorldBounds(false);
-        this.setGravityY(3000); //We will set gravity *per object* rather than for the scene!
+        this.setGravityY(0); //We will set gravity *per object* rather than for the scene!
+        
     }
     jump(event)
     {
