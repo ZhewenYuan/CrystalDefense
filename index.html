@@ -91,7 +91,7 @@
         this.load.image('background', 'Assets/background1.png');
         this.load.image('platform', 'Assets/platform_1.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
-        this.load.image('crystal', 'Assets/crystal_sprite.png');    
+        this.load.image('crystal', 'Assets/crystal_final.png');    
         this.load.atlas('enemy', 'Assets/lavaMon.png', 'Assets/lavaMon.json');
         this.load.atlas('sword', 'Assets/sword_sw.png', 'Assets/sword_sw.json');
 
@@ -168,20 +168,19 @@
        playerAnimations['idle'] = idle;
        var walk = this.anims.create({key: 'knight_walking', frames: this.anims.generateFrameNames('player', {prefix: 'knight_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 8 });
        playerAnimations['walking'] = walk;
-       var jump = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
-       playerAnimations['jumping'] = jump;
+       var jumps = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
+       playerAnimations['jumping'] = jumps;
         
        var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 0, end: 3, zeroPad: 2}), repeat: 0, frameRate: 28 });
        swordAnimations['swing'] = swing;
        var swing_complete = this.anims.create({key: 'sword_sw', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 4, end: 5, zeroPad: 2}), repeat: 0, frameRate: 28 });
        swordAnimations['swing_complete'] = swing_complete;
         
-       var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
-       enemyAnimations['enemy_walk'] = enemy_walk;
+       
             
        player.play(playerAnimations['idle']);
         
-       //enemies.play(enemyAnimations['enemy_walk']);
+       
         /*
        const camera = this.cameras.main;
        camera.postFX.addVignette(0.5, 0.5, 0.7);
@@ -321,7 +320,7 @@
         }
             }
         else{
-            instruction.setText('Press E to Start the Game.');
+            instruction.setText('Press E to Start the Game');
         }
         
             
@@ -333,6 +332,8 @@
 
     function AttackCrystal(enemy)
     {
+        maxEnemies--;   
+        gui.setText('Enemies left: ' + maxEnemies);
         enemy.disableBody(true,true)
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
@@ -345,7 +346,6 @@
         
         if (attackState){
             maxEnemies--;   
-            //enemy.setVelocityY(-500);
             gui.setText('Enemies left: ' + maxEnemies);
             enemy.disableBody(true,true)
             //console.log("gone")

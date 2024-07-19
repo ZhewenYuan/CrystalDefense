@@ -12,12 +12,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         this.flipX = true;
         this.path = null;
         this.currentNode = null;
-        this.anims.create({key: 'lavaMonster',
-                frames: this.anims.generateFrameNames('lavaMonster_walking', 
-                {prefix: 'lavaMonster',
-                end: 5, zeroPad: 4}),
-                repeat: -1});
-
+        var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 15 });
+        enemyAnimations['enemy_walk'] = enemy_walk;
+        this.play(enemyAnimations['enemy_walk']);
     }
 /*  
     enemyWalk(event){
@@ -74,8 +71,10 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         if (this.x < this.path[this.nextNode].x) {
                 
             this.setVelocityX(400);
+            this.flipX = true;
         } else {
             this.setVelocityX(-400);
+            this.flipX = false;
         }
     }
     
