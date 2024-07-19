@@ -131,7 +131,7 @@
        
 
        currentCrystal = 1;
-       crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal', 10);
+       crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal', 1);
 
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
@@ -241,16 +241,19 @@
             }
         if (gameState)
         {
-            if (player.y > 1200) 
+            if (player.y > 1200 || crystal.crystalHP<=0) 
             {
                 gameOver.setText('Game Over');
+                console.log(crystal.crystalHP)
                 for(let i=0; i<enemies.length; i++)
                 {
                     enemies[i].disableBody(true,true)
                 }
                 //console.log("GAME OVER");
+                console.log(gameOverBOOL)
                 gameOverBOOL=true
-                gameState=false;
+                console.log(gameOverBOOL)
+                gameState=false;    
                  //this.gameOver();
             }
                       
@@ -389,14 +392,14 @@
                 }
             }
         }
-        else if(crystal.crystalHP <=0 || player.y>1200)
-        {
-            console.log("reset")
-            instruction.setText('Press E to Restart the Game')
-            
-        }
         else{
             instruction.setText('Press E to Start the Game');
+        }
+        if((crystal.crystalHP <=0 || player.y>1200) && gameState==false)
+        {
+            console.log("death")
+            instruction.setText('Press E to Restart the Game')
+            
         }
         if (keys.E.isDown && gameOverBOOL== true )//&& gameState === false)
             {

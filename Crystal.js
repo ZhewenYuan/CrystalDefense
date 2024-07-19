@@ -1,5 +1,6 @@
 class Crystal extends Phaser.Physics.Arcade.Sprite
 {
+    
     constructor(scene,x,y,sprite, hp)
     {
         super(scene,x,y,sprite);
@@ -23,7 +24,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
             gameOver.setText('Game Over');
             console.log("GAME OVER");
             
-            game.destroy();
+            
         }
     }
     addTween(scene, xDist, yDist, time) 
