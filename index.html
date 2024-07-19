@@ -13,9 +13,7 @@
     <script src = "Node.js"></script>
     <script src = "Path.js"></script>
     <script src = "Platform.js"></script>
-
-
-    
+ 
 </head>
 
 <body>
@@ -34,6 +32,7 @@
         type: Phaser.AUTO,
         width: pgWidth,
         height: pgHeight,
+        pixelArt: true,
         physics: {
             default: 'arcade',
         },
@@ -46,14 +45,7 @@
 
     };
         
-        
-
-
     var game = new Phaser.Game(config);
-    
-
-  
-
     var totalEnemies;
     var maxEnemies;
 
@@ -103,11 +95,11 @@
         this.load.audio('theme', 'Assets/crystal.wav');
 }
         
-       
-
     var totalEnemies;
     var numberEnemies;
     let spawners;
+    let currentCrystal;
+        
     function create()
     {
 
@@ -126,8 +118,8 @@
        createPlatforms(this);
        
 
-
-       crystal = new Crystal(this,plats[0].x,plats[0].y - 100,'crystal');
+       currentCrystal = 1;
+       crystal = new Crystal(this,plats[1].x,plats[1].y - 100,'crystal', 10);
 
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
@@ -137,9 +129,10 @@
        
        counter = 0;   
        roundCount = 0;
-        
+
         spawn1 = new EnemySpawner(5000,plats[2],enemies,this, totalEnemies, path, crystal);
-        spawn2 = new EnemySpawner(5000,plats[1],enemies,this, totalEnemies, path, crystal);
+        spawn2 = new EnemySpawner(5000,plats[0],enemies,this, totalEnemies, path, crystal);
+
         spawn3 = new EnemySpawner(4700, plats[3], enemies, this, totalEnemies, path, crystal);
         spawn4 = new EnemySpawner(5200, plats[4], enemies, this, totalEnemies, path, crystal);
 
@@ -191,13 +184,7 @@
        var swing_complete = this.anims.create({key: 'sword_sw', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', start: 4, end: 5, zeroPad: 2}), repeat: 0, frameRate: 28 });
        swordAnimations['swing_complete'] = swing_complete; 
             
-       player.play(playerAnimations['idle']);
-        
-       
-        /*
-       const camera = this.cameras.main;
-       camera.postFX.addVignette(0.5, 0.5, 0.7);
-       */       
+       player.play(playerAnimations['idle']);    
        
     }
 
@@ -231,8 +218,6 @@
         
     }
         
-        
-
     function update()
         {   
             //console.log(this.timedEvent.getProgress());
@@ -242,8 +227,6 @@
                 instruction.setText('');
                 player.setGravityY(3000);
             }
-            
-            
             if (gameState){
                 if (player.y > 1200) 
             {
@@ -252,8 +235,7 @@
             game.destroy();
             //this.gameOver();
         }
-                
-                
+                      
         
         sword.y = player.y;
         
@@ -261,14 +243,11 @@
             sword.x = player.x + (swordDis * -1);
             player.flipX = true;
             sword.flipX = true;
-
-
         }
         else{
             sword.x = player.x + swordDis;
             player.flipX = false;
             sword.flipX = false;
-
         }
         
         //Player will not move in the x-axis unless a movement key is being pressed
@@ -286,15 +265,12 @@
             player.setVelocityX(-450);
             faceLeft = true;
             player.play(playerAnimations['walking'],true);
-            
         }
         if (cursors.right.isDown || keys.D.isDown)
         {
             player.setVelocityX(450);
             faceLeft = false;
             player.play(playerAnimations['walking'],true);
-            
-            
         }
         if (cursors.up.isDown || keys.W.isDown)
         {
@@ -311,10 +287,7 @@
 
             
                 swordDis = 65;
-                
-
                 canAttack = false;
-
                 attackState = true;
                 sword.play(swordAnimations['swing'],true);
                 
@@ -351,9 +324,12 @@
             
         if (maxEnemies <= 0) {
             let newLocation = Phaser.Math.Between(0, 2);
-            
-            crystal.disableBody(true, true);
-            crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal');
+            while (newLocation === currentCrystal) {
+                newLocation = Phaser.Math.Between(0, 2);
+            }
+            currentCrystal = newLocation;
+            crystal.disableBody(true, true);          
+            crystal = new Crystal(this, plats[newLocation].x, plats[newLocation].y - 100, 'crystal', crystal.crystalHP);
             this.physics.add.overlap(enemies, crystal, AttackCrystal, null, this); 
 
             if (newLocation === 0) {
@@ -362,7 +338,6 @@
                 spawn3.destroy();
                 spawn4.destroy();
                 spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[2],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[1], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
             } else if (newLocation === 1) {
@@ -380,12 +355,12 @@
                 spawn3.destroy();
                 spawn4.destroy();
                 spawn1 = new EnemySpawner(spawn1.delay * 0.9,plats[0],enemies,this, Math.round(numberEnemies), path, crystal);
-                spawn2 = new EnemySpawner(spawn2.delay * 0.9, plats[1], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn3 = new EnemySpawner(spawn3.delay * 0.9, plats[3], enemies, this, Math.round(numberEnemies), path, crystal);
                 spawn4 = new EnemySpawner(spawn4.delay * 0.9, plats[4], enemies, this, Math.round(numberEnemies), path, crystal);
             }
             numberEnemies = Math.round(numberEnemies * 1.2);
             maxEnemies = numberEnemies;
+            gui.setText("Enemies left: " + numberEnemies);
             roundCount = 0;
             totalEnemies = numberEnemies;
         } 
@@ -394,13 +369,8 @@
     
         
     
-
     function AttackCrystal(enemy)
     {
-
-
-        
-
         EnemyDeath(enemy);
         crystal.loseHP();
         crystalHealth.setText('Crystal Health: ' + crystal.crystalHP);
@@ -427,12 +397,6 @@
         
     }
         
-     
-    
-        
-    
-    
-
     </script>
 
 </body>

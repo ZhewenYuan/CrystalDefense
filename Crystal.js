@@ -1,6 +1,6 @@
 class Crystal extends Phaser.Physics.Arcade.Sprite
 {
-    constructor(scene,x,y,sprite)
+    constructor(scene,x,y,sprite, hp)
     {
         super(scene,x,y,sprite);
         scene.add.existing(this);
@@ -8,7 +8,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite
         this.setScale(0.225);
         this.setCollideWorldBounds(true);
         this.body.setImmovable(true);
-        this.crystalHP = 10;
+        this.crystalHP = hp;
         this.sprite = sprite;
         this.targetY = y + 33;
     }
