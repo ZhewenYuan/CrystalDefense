@@ -41,9 +41,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     moveEnemy()
     {
         
-        if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) {
-            
-            
+        if (Math.abs(this.x - this.path[this.currentNode].x) >= Math.abs(this.path[this.nextNode].x - this.path[this.currentNode].x)) { 
             
             if (this.y != this.path[this.nextNode].y) {
                 
@@ -67,18 +65,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
             }
         }
         
-        
-            if (this.x < this.path[this.nextNode].x) {
+        if (this.x < this.path[this.nextNode].x) {
                 
             this.setVelocityX(400);
-            } else {
-                this.setVelocityX(-400);
-            }
-        
-        
-
-    
-
+        } else {
+            this.setVelocityX(-400);
+        }
     }
     
     

@@ -26,6 +26,7 @@
     let swordDis = 50;
     let attackState = false;
     let faceLeft = false;
+    let gameState = false;
     //let pointer = this.input.activePointer;    
 
     var config = {
@@ -76,10 +77,11 @@
         
     var path;
         
+        
     function preload()
     {
         this.load.image('background', 'Assets/background1.png');
-        this.load.image('platform', 'Assets/platform.png');
+        this.load.image('platform', 'Assets/platform_large.png');
         this.load.atlas('player', 'Assets/knight_spritesheet.png','Assets/knight_spritesheet.json');
         this.load.image('crystal', 'Assets/crystal_sprite.png');
         this.load.atlas('enemy', 'Assets/lavaMonster_spritesheet.png', 'Assets/lavaMonster_spritesheet.json');
@@ -99,6 +101,7 @@
         totalEnemies = 500;
         maxEnemies = totalEnemies;
 
+
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
   
        path = new Path();
@@ -112,11 +115,12 @@
                
        
        
-       crystal = new Crystal(this,200,283,'crystal');
+       crystal = new Crystal(this,924,433,'crystal');
 
        //enemies.push(new Enemy(this, 200, 533,'enemy'))
        //enemies[0].setPath(path, Array.from(path.map.keys()).find(val => val.x === crystal.x && val.y === crystal.y));
        
+<<<<<<< HEAD
        player = new Player(this, 100, 100);
 
     
@@ -126,14 +130,25 @@
        
 
 
+=======
+       player = new Player(this, 924, 100);
+>>>>>>> eec36900d6d5857213534aea75c182aa122015e5
        
+       counter = 0;   
 
+<<<<<<< HEAD
+=======
+       spawn1 = new EnemySpawner(2000,plats[2],enemies,this, totalEnemies, path, crystal);
+        spawn2 = new EnemySpawner(1536, plats[0], enemies, this, totalEnemies, path, crystal);
+        spawn3 = new EnemySpawner(1783, plats[3], enemies, this, totalEnemies, path, crystal);
+        spawn4 = new EnemySpawner(1294, plats[4], enemies, this, totalEnemies, path, crystal);
+>>>>>>> eec36900d6d5857213534aea75c182aa122015e5
 
        this.physics.add.collider(player, platforms);
        this.physics.add.collider(enemies, platforms);
        //Set up user input
        cursors = this.input.keyboard.createCursorKeys();
-       keys = this.input.keyboard.addKeys('A, D, W');
+       keys = this.input.keyboard.addKeys('A, D, W, E');
        space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
        space.on('down', player.jump); //calls jump function when space is pressed
         
@@ -142,6 +157,9 @@
        music.play();
         
        sword = new Sword(this, player.x+swordDis, 0);
+       sword.x = player.x + swordDis;
+       sword.y = 10000;
+
         
     //    for(var i=0; i<enemies.length; i++)
     //     {
@@ -175,28 +193,35 @@
         
         platforms = scene.physics.add.staticGroup();
 
-
-
-        platforms.create(250, 350, 'platform').setDisplaySize(500, 50).refreshBody();
+        platforms.create(250, 300, 'platform').setDisplaySize(500, 50).refreshBody();
         
-        platforms.create(950, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
+        platforms.create(924, 500, 'platform').setDisplaySize(500, 50).refreshBody(); //creates the bottome right platform
         
-        platforms.create(350, 600, 'platform').setDisplaySize(500, 50).refreshBody();
+        platforms.create(250, 700, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.create(1598, 300, 'platform').setDisplaySize(500, 50).refreshBody();
+        
+        platforms.create(1598, 700, 'platform').setDisplaySize(500, 50).refreshBody();
         
         platforms.getChildren().forEach(val => {
             plats.push(new Platform(val.x, val.y, 500, path));
         });
         plats[0].connectRight(plats[1].leftSide, path);
         plats[1].connectLeft(plats[2].rightSide, path);
-
+        plats[3].connectLeft(plats[1].rightSide, path);
+        plats[4].connectLeft(plats[1].rightSide, path);
     }
 
     function update()
-    {
-        
-        
-        if (player.y > 1200) 
-        {
+        {   
+            
+            if (keys.E.isDown){
+                gameState = true;
+            }
+            
+            if (gameState){
+                if (player.y > 1200) 
+            {
             gameOver.setText('Game Over');
             console.log("GAME OVER");
             game.destroy();
@@ -228,7 +253,7 @@
             player.jumpCount=0;
         }
         //Handle player movements
-        if (cursors.left.isDown || keys .A.isDown)
+        if (cursors.left.isDown || keys .A.isDown)
         {
             player.setVelocityX(-450);
             faceLeft = true;
@@ -246,15 +271,18 @@
         
         this.input.on('pointerdown', function (pointer)
         {
+            if (canAttack) {
+                swordDis = 75;
+                canAttack = false;
+                attackState = true;
+            }
             
-            swordDis = 75;
-
-            attackState = true;
             }, this)
         this.input.on('pointerup', function (pointer)
         {
              
             swordDis = 50;
+            canAttack = true;
             attackState = false;
         }, this)
         
@@ -271,8 +299,14 @@
                 enemies[i].disableBody(true,true)
             }
         }
+            }
+        
+            
         
     }
+    
+        
+    
 
     function AttackCrystal(enemy)
     {

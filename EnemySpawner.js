@@ -18,7 +18,7 @@ class EnemySpawner
         
     addEnemy(enemies, platform, crystal, path) {
         
-        if(totalEnemies>0) {
+        if(totalEnemies>0 && gameState) {
             var x = Phaser.Math.Between(1,platform.nodes.length - 2);
 
             enemies.push(new Enemy(this, platform.nodes[x].x, platform.y - 67,'enemy'));
