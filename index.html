@@ -68,6 +68,7 @@
     var counter;
     var gameOver;
     var instruction;
+    var canAttack;
 
     var Spawner;
 
@@ -81,6 +82,7 @@
         
     let playerAnimations = {};   
     let enemyAnimations = {}
+    let swordAnimations = {};
     
         
     function preload()
@@ -137,9 +139,8 @@
        music.loop = true;
        music.play();
         
-       sword = new Sword(this, player.x+swordDis, 0);
+       sword = new Sword(this, player.x+swordDis, 1500);
        sword.x = player.x + swordDis;
-       sword.y = 1500;
 
         
     //    for(var i=0; i<enemies.length; i++)
@@ -164,14 +165,20 @@
         
        var idle = this.anims.create({key: 'knight_idle', frames: this.anims.generateFrameNames('player', {prefix: 'knight_idle', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
        playerAnimations['idle'] = idle;
-       var walk = this.anims.create({key: 'knight_walking', frames: this.anims.generateFrameNames('player', {prefix: 'knight_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       var walk = this.anims.create({key: 'knight_walking', frames: this.anims.generateFrameNames('player', {prefix: 'knight_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 8 });
        playerAnimations['walking'] = walk;
        var jump = this.anims.create({key: 'knight_jumping', frames: this.anims.generateFrameNames('player', {prefix: 'knight_jumping', end: 7, zeroPad: 2}), repeat: -1, frameRate: 10 });
        playerAnimations['jumping'] = jump;
+        
+       var swing = this.anims.create({key: 'sword_swing', frames: this.anims.generateFrameNames('sword', {prefix: 'sword_swing', end: 3, zeroPad: 2}), repeat: -1, frameRate: 5 });
+       swordAnimations['swing'] = sword;
+        
        var enemy_walk = this.anims.create({key: 'lavaMonster_walking', frames: this.anims.generateFrameNames('enemy', {prefix: 'lavaMonster_walking', end: 5, zeroPad: 2}), repeat: -1, frameRate: 5 });
        enemyAnimations['enemy_walk'] = enemy_walk;
             
-       player.play(playerAnimations['walking']);
+       player.play(playerAnimations['idle']);
+       sword.play(swordAnimations['swing']);
+        
        //enemies.play(enemyAnimations['enemy_walk']);
         /*
        const camera = this.cameras.main;
@@ -257,7 +264,6 @@
         {
             player.setVelocityX(-450);
             faceLeft = true;
-            playerState = 1;
             player.play(playerAnimations['walking'],true);
             
         }
@@ -265,7 +271,6 @@
         {
             player.setVelocityX(450);
             faceLeft = false;
-            playerState = 1;
             player.play(playerAnimations['walking'],true);
             
             
@@ -273,7 +278,6 @@
         if (cursors.up.isDown || keys.W.isDown)
         {
             player.jump();
-            playerState = 2;
         }
                 
         if (!(cursors.left.isDown || keys .A.isDown || cursors.right.isDown || keys.D.isDown || cursors.up.isDown || keys.W.isDown))  {
@@ -287,6 +291,7 @@
                 swordDis = 75;
                 canAttack = false;
                 attackState = true;
+                
             }
             
             }, this)
